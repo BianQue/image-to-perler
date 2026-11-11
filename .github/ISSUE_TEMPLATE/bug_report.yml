@@ -1,0 +1,38 @@
+name: 报告问题
+description: 报告转换或编辑器中的可复现问题
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期行为
+      description: 你希望工具产生什么结果？
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际行为
+      description: 请提供完整错误信息，隐藏个人路径和凭证。
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤
+      description: 请提供命令、尺寸、颜色数和必要的输入说明。
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: 环境
+      description: 操作系统、Python 版本、浏览器和项目版本。
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    options:
+      - label: 我确认附件和日志不含 API Key、私人信息或无权公开的图片。
+        required: true

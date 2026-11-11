@@ -1,0 +1,26 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+output/
+dist/
+node_modules/
+coverage/
+*.tsbuildinfo
+build/
+.wip/
+*.log
+# Local palette research; not part of the public distribution.
+/data/

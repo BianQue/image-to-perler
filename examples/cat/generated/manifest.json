@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "title": "猫咪 · 拼豆图纸",
+  "source_name": "pixel.png",
+  "default_size": 104,
+  "options": {
+    "sizes": [
+      36,
+      52,
+      78,
+      104,
+      156
+    ],
+    "max_colors": 24,
+    "keep_border": false,
+    "background": "white",
+    "white_threshold": 242
+  },
+  "files": {
+    "html": "output/pattern.html",
+    "data": "data/boards.json",
+    "boards": [
+      {
+        "size": 36,
+        "directory": "board-36",
+        "grid": "board-36/grid.csv",
+        "usage": "board-36/usage.csv",
+        "preview": "board-36/preview.png",
+        "bead_count": 671,
+        "color_count": 24
+      },
+      {
+        "size": 52,
+        "directory": "board-52",
+        "grid": "board-52/grid.csv",
+        "usage": "board-52/usage.csv",
+        "preview": "board-52/preview.png",
+        "bead_count": 1353,
+        "color_count": 24
+      },
+      {
+        "size": 78,
+        "directory": "board-78",
+        "grid": "board-78/grid.csv",
+        "usage": "board-78/usage.csv",
+        "preview": "board-78/preview.png",
+        "bead_count": 2890,
+        "color_count": 24
+      },
+      {
+        "size": 104,
+        "directory": "board-104",
+        "grid": "board-104/grid.csv",
+        "usage": "board-104/usage.csv",
+        "preview": "board-104/preview.png",
+        "bead_count": 4976,
+        "color_count": 24
+      },
+      {
+        "size": 156,
+        "directory": "board-156",
+        "grid": "board-156/grid.csv",
+        "usage": "board-156/usage.csv",
+        "preview": "board-156/preview.png",
+        "bead_count": 10963,
+        "color_count": 24
+      }
+    ]
+  }
+}

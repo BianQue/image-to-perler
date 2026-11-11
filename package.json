@@ -1,0 +1,23 @@
+{
+  "name": "image-to-perler",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "palettes": "node scripts/convert-palettes.mjs"
+  },
+  "dependencies": {
+    "three": "^0.180.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.180.0",
+    "typescript": "~5.9.3",
+    "vite": "^7.2.2",
+    "vite-plugin-singlefile": "^2.3.0",
+    "vitest": "^5.1.0"
+  }
+}
