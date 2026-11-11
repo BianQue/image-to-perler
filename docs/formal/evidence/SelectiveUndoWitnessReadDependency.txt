@@ -1,0 +1,14 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Repository-layout recheck: 2026-11-12, Asia/Taipei.
+Config: SelectiveUndoWitnessReadDependency.cfg; module: SelectiveUndo.tla.
+Expected: reachability NotRawReplayGap.
+Generated=4; distinct=4; depth=4; exit=12.
+Observed: NotRawReplayGap.
+Model SHA256: 00b7590955a0307c2f176fe3a079524cda219c23ef900895d54533688a80cfd4
+Config SHA256: 85f5deb53f2c20506f17e4ecb9e39b994d6e9e239bc2c4acfaf6891a22dcf0ef
+JAR SHA256: 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
+
+Decisive projection of the checked trace (1-based cell indices):
+Paint cell 1 to color 2; replace all remaining color 1 cells with empty; undo the paint.
+No committed writes overlap cell 1, so it returns to color 1/done=true.
+Re-executing the old Replace predicate would erase cell 1 instead. The contracts differ.

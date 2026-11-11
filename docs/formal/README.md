@@ -254,3 +254,110 @@ java -Xmx2g -XX:+UseParallelGC -cp ../../.wip/formal-tools/tla2tools.jar \
 同次还复测了单写者的重复恢复、身份、活性、其余负例、全部覆盖见证，以及原有 Workflow、EarlyAck、StaleCommit、ValueUndo，共 18 个配置。全部符合预期，计数与前文研究运行相同。逐配置计数及模型 SHA-256 见 [仓库布局复测摘要](evidence/SingleWriter-layout-recheck.txt)。`SingleWriterFP1` 未在此次整理中重跑，上表明确保留的是 2026-11-11 的第二指纹多项式结果。
 
 以上结果验证本次提交的模型和配置能够从仓库布局复现，不代表应用故障注入或 Playwright 验收通过。
+
+
+## SelectiveUndo 扩展模型
+
+2026-11-12（Asia/Taipei）补充，状态为 Proposed。恢复范围、操作性质、日志字段与应用验收清单见 [结构变换后的选择性撤销](../selective-undo-after-transform.md)。本次不实现应用功能，也不将不同模型的独立检查视为组合证明。
+
+`SelectiveUndo.tla` 对 3×2 初始网格建模，含空格、两种非空颜色、completed 和逐格版本。局部 Paint、Replace、Done 的逆经过后续 rotate、flipH、flipV 或 crop 的坐标映射。色板映射会合并颜色，首版将色板 epoch 变化作为保守屏障。crop 只模拟删除右侧一列；任意矩形 crop 尚未在应用中实现，现有 resize 缩小会截掉右侧或下方区域。
+
+主探索限最多 4 条历史操作，Paint 选集限当前首尾格及组合，Done 限首尾格，Replace 可修改更广写集。定向组合路径包含 5 条操作。模型检查 TypeOK、NoSilentOverwrite、PreserveLaterEdits、CorrectInverse、ColorDoneConsistency、ConflictReported 与 ABADetected。结构事务自身的选择性撤销、扩尺寸、部分恢复重试及 undo-of-undo 未获证明。
+
+`CorrectInverse` 比较的是省略目标后重放后续**已提交的具体效果**，不是重新执行旧 UI 条件命令。坐标组合路径与稳定格子身份参考路径分开；无冲突时比较整张图的颜色与 completed，有冲突时只比较安全子集并保持其他当前内容不变。`SelectiveUndoWitnessReadDependency` 明确找到了 Replace 在两种重放契约下不同的结果。若产品选择原命令重执行语义，仍须补读集与语义依赖；不能把本节当作该更强契约已通过。
+
+### 配置、预期与仓库布局实测
+
+所有新配置均使用 `SelectiveUndo` 前缀，内容与研究运行逐字一致，仅改文件名。模型也保持字节一致。本次在本分支的 `docs/formal/` 用相对路径重跑全部 32 个新配置及原 `Collaboration.cfg`，共 33 项，均符合预期。工具为相同 SHA-256 的官方 v1.7.4 JAR、TLC 2.19、Java 17.0.13，1 worker、seed 20261112、fp 0。
+
+下表全部为本次仓库布局运行的真实数字。负例与见证在指定不变量首次违反时停止，exit 12 是预期结果，不是正向协议失败。它们的深度不能解释为完整空间的最大深度。各配置摘要与短轨迹只保留决定性投影，不提交完整日志或缓存。
+
+| 配置 | 预期 | 实际 | 生成状态 | 不同状态 | 深度 | exit |
+|---|---|---|---:|---:|---:|---:|
+| [SelectiveUndoPositive](evidence/SelectiveUndoPositive.txt) | 通过 | 通过，队列耗尽 | 266625 | 134295 | 5 | 0 |
+| [SelectiveUndoPositiveABA](evidence/SelectiveUndoPositiveABA.txt) | 通过 | 通过，队列耗尽 | 6 | 5 | 5 | 0 |
+| [SelectiveUndoWitnessABA](evidence/SelectiveUndoWitnessABA.txt) | 见证 NotABA | NotABA | 5 | 5 | 5 | 12 |
+| [SelectiveUndoPositiveRotate](evidence/SelectiveUndoPositiveRotate.txt) | 通过 | 通过，队列耗尽 | 6 | 5 | 5 | 0 |
+| [SelectiveUndoWitnessRotate](evidence/SelectiveUndoWitnessRotate.txt) | 见证 NotRotate | NotRotate | 5 | 5 | 5 | 12 |
+| [SelectiveUndoPositiveFlipH](evidence/SelectiveUndoPositiveFlipH.txt) | 通过 | 通过，队列耗尽 | 6 | 5 | 5 | 0 |
+| [SelectiveUndoWitnessFlipH](evidence/SelectiveUndoWitnessFlipH.txt) | 见证 NotFlip | NotFlip | 5 | 5 | 5 | 12 |
+| [SelectiveUndoPositiveFlipV](evidence/SelectiveUndoPositiveFlipV.txt) | 通过 | 通过，队列耗尽 | 6 | 5 | 5 | 0 |
+| [SelectiveUndoWitnessFlipV](evidence/SelectiveUndoWitnessFlipV.txt) | 见证 NotFlip | NotFlip | 5 | 5 | 5 | 12 |
+| [SelectiveUndoPositiveChain](evidence/SelectiveUndoPositiveChain.txt) | 通过 | 通过，队列耗尽 | 7 | 6 | 6 | 0 |
+| [SelectiveUndoWitnessChain](evidence/SelectiveUndoWitnessChain.txt) | 见证 NotPartial | NotPartial | 6 | 6 | 6 | 12 |
+| [SelectiveUndoPositiveReadDependency](evidence/SelectiveUndoPositiveReadDependency.txt) | 通过 | 通过，队列耗尽 | 5 | 4 | 4 | 0 |
+| [SelectiveUndoWitnessReadDependency](evidence/SelectiveUndoWitnessReadDependency.txt) | 见证 NotRawReplayGap | NotRawReplayGap | 4 | 4 | 4 | 12 |
+| [SelectiveUndoPositivePartial](evidence/SelectiveUndoPositivePartial.txt) | 通过 | 通过，队列耗尽 | 5 | 4 | 4 | 0 |
+| [SelectiveUndoWitnessPartial](evidence/SelectiveUndoWitnessPartial.txt) | 见证 NotPartial | NotPartial | 4 | 4 | 4 | 12 |
+| [SelectiveUndoPositiveCrop](evidence/SelectiveUndoPositiveCrop.txt) | 通过 | 通过，队列耗尽 | 5 | 4 | 4 | 0 |
+| [SelectiveUndoWitnessCrop](evidence/SelectiveUndoWitnessCrop.txt) | 见证 NotPartial | NotPartial | 4 | 4 | 4 | 12 |
+| [SelectiveUndoPositivePalette](evidence/SelectiveUndoPositivePalette.txt) | 通过 | 通过，队列耗尽 | 5 | 4 | 4 | 0 |
+| [SelectiveUndoWitnessPalette](evidence/SelectiveUndoWitnessPalette.txt) | 见证 NotConflict | NotConflict | 4 | 4 | 4 | 12 |
+| [SelectiveUndoPositivePaletteInverse](evidence/SelectiveUndoPositivePaletteInverse.txt) | 通过 | 通过，队列耗尽 | 4 | 3 | 3 | 0 |
+| [SelectiveUndoWitnessPaletteInverse](evidence/SelectiveUndoWitnessPaletteInverse.txt) | 见证 NotConflict | NotConflict | 3 | 3 | 3 | 12 |
+| [SelectiveUndoPositiveDone](evidence/SelectiveUndoPositiveDone.txt) | 通过 | 通过，队列耗尽 | 4 | 3 | 3 | 0 |
+| [SelectiveUndoWitnessDone](evidence/SelectiveUndoWitnessDone.txt) | 见证 NotRestore | NotRestore | 3 | 3 | 3 | 12 |
+| [SelectiveUndoPositiveProject](evidence/SelectiveUndoPositiveProject.txt) | 通过 | 通过，队列耗尽 | 5 | 4 | 4 | 0 |
+| [SelectiveUndoWitnessProject](evidence/SelectiveUndoWitnessProject.txt) | 见证 NotConflict | NotConflict | 4 | 4 | 4 | 12 |
+| [SelectiveUndoPositiveRepeat](evidence/SelectiveUndoPositiveRepeat.txt) | 通过 | 通过，队列耗尽 | 6 | 5 | 5 | 0 |
+| [SelectiveUndoWitnessRepeat](evidence/SelectiveUndoWitnessRepeat.txt) | 见证 NotRepeat | NotRepeat | 5 | 5 | 5 | 12 |
+| [SelectiveUndoNegativeValueABA](evidence/SelectiveUndoNegativeValueABA.txt) | 反例 NoSilentOverwrite | NoSilentOverwrite | 5 | 5 | 5 | 12 |
+| [SelectiveUndoNegativeNoCoordinateMap](evidence/SelectiveUndoNegativeNoCoordinateMap.txt) | 反例 CorrectInverse | CorrectInverse | 5 | 5 | 5 | 12 |
+| [SelectiveUndoNegativePaletteGuess](evidence/SelectiveUndoNegativePaletteGuess.txt) | 反例 CorrectInverse | CorrectInverse | 3 | 3 | 3 | 12 |
+| [SelectiveUndoNegativeColorOnly](evidence/SelectiveUndoNegativeColorOnly.txt) | 反例 CorrectInverse | CorrectInverse | 3 | 3 | 3 | 12 |
+| [SelectiveUndoNegativeHiddenConflict](evidence/SelectiveUndoNegativeHiddenConflict.txt) | 反例 ConflictReported | ConflictReported | 4 | 4 | 4 | 12 |
+| Collaboration（原配置） | 通过 | 通过，队列耗尽 | 616 | 332 | 10 | 0 |
+
+[布局复测摘要](evidence/SelectiveUndo-layout-recheck.txt)保留全部计数与模型哈希。33 项中的 14 个新正向配置 exit 0，13 个覆盖或诊断见证与 5 个错误变体 exit 12，原 Collaboration exit 0。不同配置状态空间重叠，不求和。这次没有重跑 SingleWriter 的大模型，原有模型、配置与证据也没有修改。
+
+### 反例与覆盖见证
+
+- `SelectiveUndoNegativeValueABA` 用值相等替代版本检查，覆盖后来改回相同值的人工编辑。
+- `SelectiveUndoNegativeNoCoordinateMap` 不组合旋转后的坐标，在旧位置检查版本，漏掉本来能恢复的格子。该条轨迹不是错格覆盖。
+- `SelectiveUndoNegativeColorOnly` 丢掉 completed 的前像，恢复出格式可能合法但语义错误的状态。
+- `SelectiveUndoNegativeHiddenConflict` 恢复裁剪保留区，却隐瞒删除区冲突并称全部成功。
+- `SelectiveUndoNegativePaletteGuess` 把合并后的同色猜回一个旧色，错误修改原本属于另一旧色的格子。
+
+`SelectiveUndoWitnessRotate`、两个 `WitnessFlip*`、`WitnessCrop` 与 `WitnessChain` 证明自动恢复与部分恢复确实可达，防止“全部拒绝所以永不出错”的假通过。`WitnessPalette` 证明换板屏障确实报告冲突。其余见证覆盖 ABA、完成标记、跨项目拒绝、处理两个目标以及重放契约差异。配置名称都带完整的 `SelectiveUndo` 前缀。
+
+### 相对路径复现
+
+先按本文件 SingleWriter 节的工具下载及 SHA-256 命令，将官方 JAR 放入仓库忽略目录 `.wip/formal-tools/`。下面从仓库根目录开始，Java 17 或更高版本即可运行。JAR 与输出日志均不纳入版本控制。
+
+```sh
+cd docs/formal
+java -Xmx2g -XX:+UseParallelGC -cp ../../.wip/formal-tools/tla2tools.jar \
+  tlc2.TLC -workers 1 -seed 20261112 -fp 0 \
+  -metadir ../../.wip/formal-tools/recheck-selective-undo-positive \
+  -config SelectiveUndoPositive.cfg SelectiveUndo.tla
+```
+
+全量复现时，每个配置使用不同的缓存目录。下面的退出码检查不吞掉运行错误；对 exit 12 的结果，还需按表核对指定的不变量名。
+
+```sh
+for cfg in SelectiveUndo*.cfg; do
+  case "$cfg" in
+    SelectiveUndoNegative*|SelectiveUndoWitness*) expected=12 ;;
+    *) expected=0 ;;
+  esac
+  status=0
+  java -Xmx2g -XX:+UseParallelGC -cp ../../.wip/formal-tools/tla2tools.jar \
+    tlc2.TLC -workers 1 -seed 20261112 -fp 0 \
+    -metadir "../../.wip/formal-tools/recheck-${cfg%.cfg}" \
+    -config "$cfg" SelectiveUndo.tla \
+    > "../../.wip/formal-tools/${cfg%.cfg}.log" 2>&1 || status=$?
+  test "$status" -eq "$expected" || exit 1
+done
+java -Xmx2g -XX:+UseParallelGC -cp ../../.wip/formal-tools/tla2tools.jar \
+  tlc2.TLC -workers 1 -seed 20261112 -fp 0 \
+  -metadir ../../.wip/formal-tools/recheck-selective-original-collaboration \
+  -config Collaboration.cfg Collaboration.tla
+```
+
+真实源码性质检查用 Node 24 原生剥离 TypeScript 类型，不改变算法。从仓库根目录运行：
+
+```sh
+node docs/formal/SelectiveUndoSourceCheck.mjs
+```
+
+本次实际 13 项通过，见 [源码检查摘要](evidence/SelectiveUndo-source-check.txt)。检查直接导入 `src/core.ts`，换板部分抽取 `src/main.ts` 的原始 handler，在固定本地输入上运行。它确认 paint 改色清 completed、map-palette 保留 completed、非方图几何映射及条件命令重执行的差异，不构成应用选择性撤销或浏览器端到端测试。Node 的类型剥离实验性提示不是测试失败。

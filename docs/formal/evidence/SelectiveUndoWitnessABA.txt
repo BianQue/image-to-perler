@@ -1,0 +1,13 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Repository-layout recheck: 2026-11-12, Asia/Taipei.
+Config: SelectiveUndoWitnessABA.cfg; module: SelectiveUndo.tla.
+Expected: reachability NotABA.
+Generated=5; distinct=5; depth=5; exit=12.
+Observed: NotABA.
+Model SHA256: 00b7590955a0307c2f176fe3a079524cda219c23ef900895d54533688a80cfd4
+Config SHA256: a72ac8fd04bffa0757eef4db08352e41502221a0e77718ff2e2ef3abe7ec62d1
+JAR SHA256: 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
+
+Decisive projection of the checked trace (1-based cell indices):
+Paint cell 1 to 2; human paints it to 0 and back to 2.
+The same visible value has a later version. Undo rejects and reports cell 1.
