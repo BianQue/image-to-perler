@@ -152,6 +152,6 @@ Issues and improvement suggestions are welcome. See the [contribution guide](CON
 
 ## License
 
-Project code is licensed under the [MIT License](LICENSE).
+Project code is licensed under the [MIT License](LICENSE); third-party palettes and dependencies follow their respective licenses.
 
-Third-party palettes and dependencies retain their own copyrights and licenses. See the [cat example documentation](examples/cat/README.md) for its image permission statement. When creating or sharing patterns from other images, make sure you have the appropriate rights to use them.
+The [Sikang (司康) photo](examples/cat/README.md) is used as a project example with the cat owner's permission. The photo and derivative images are excluded from the project's MIT license.

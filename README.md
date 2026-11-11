@@ -151,6 +151,6 @@ npm run build      # 构建单文件离线工作台
 
 ## 许可证
 
-项目代码采用 [MIT License](LICENSE)。
+项目代码采用 [MIT License](LICENSE)；第三方色板和依赖遵循各自许可证。
 
-第三方色板和依赖保留各自的版权与许可证。猫咪示例的素材授权说明见[示例文档](examples/cat/README.md)。使用其他图片制作或分享图纸时，请确认相应素材的使用权限。
+[司康照片](examples/cat/README.md)经猫咪主人授权用于本项目示例，照片及派生图片不纳入项目的 MIT 授权范围。
