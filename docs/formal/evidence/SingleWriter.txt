@@ -1,0 +1,8 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Recorded: 2026-11-11, Asia/Taipei; Java 17.0.13; one worker; breadth-first search.
+Config: SingleWriter.cfg; module: SingleWriter.tla
+Fingerprint polynomial: 0; seed: 1.
+Model checking completed. No error has been found.
+47596079 states generated, 7470612 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 32.
+PROCESS_EXIT_CODE=0

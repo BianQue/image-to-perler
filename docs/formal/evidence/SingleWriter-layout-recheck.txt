@@ -1,0 +1,32 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Repository-layout recheck: 2026-11-12, Asia/Taipei.
+Java 17.0.13; one worker; breadth-first search; seed 1; fingerprint polynomial 0.
+Commands run from docs/formal with ../../.wip/formal-tools/tla2tools.jar.
+Full SingleWriter.cfg checked; no smaller substitute. SingleWriterFP1 was not rerun in this integration check.
+The raw process output is omitted; the following numbers are extracted from completed TLC runs.
+
+Config | module | generated | distinct | depth | exit | result
+SingleWriter | SingleWriter | 47596079 | 7470612 | 32 | 0 | PASS
+SingleWriterRestartTwice | SingleWriter | 450001 | 93443 | 27 | 0 | PASS
+SingleWriterIdentity | SingleWriter | 210673 | 41355 | 28 | 0 | PASS
+SingleWriterLive | SingleWriterLive | 194 | 112 | 14 | 0 | PASS
+SingleWriterEarlyAck | SingleWriter | 609 | 227 | 9 | 12 | AcknowledgedIsDurable
+SingleWriterNoFence | SingleWriter | 10197 | 3283 | 9 | 12 | SingleActiveWriter
+SingleWriterNoDedupe | SingleWriter | 1166 | 360 | 11 | 12 | NoDuplicateApply
+SingleWriterFilename | SingleWriter | 24 | 15 | 4 | 12 | ProjectIdentity
+SingleWriterGrantRace | SingleWriter | 22451 | 6473 | 10 | 12 | SingleActiveWriter
+SingleWriterCoverBrowserTwice | SingleWriter | 37585 | 10954 | 13 | 12 | NotTwoBrowserRecoveries (reachability witness)
+SingleWriterCoverServiceTwice | SingleWriter | 61483 | 17150 | 14 | 12 | NotTwoServiceRecoveries (reachability witness)
+SingleWriterCoverBrowserAhead | SingleWriter | 3471 | 1255 | 9 | 12 | NotBrowserAheadResumed (reachability witness)
+SingleWriterCoverServiceAhead | SingleWriter | 57430 | 16097 | 14 | 12 | NotServiceAheadReplayed (reachability witness)
+Collaboration | Collaboration | 616 | 332 | 10 | 0 | PASS
+Workflow | Workflow | 1661 | 756 | 17 | 0 | PASS
+EarlyAck | Collaboration | 37 | 30 | 4 | 12 | AcknowledgedIsDurable
+StaleCommit | Collaboration | 26 | 21 | 4 | 12 | NoSilentOverwrite
+ValueUndo | Collaboration | 369 | 228 | 8 | 12 | NoSilentOverwrite
+
+SHA-256 of rechecked modules:
+f9fc865c39bc4a347ebbc515492af1246261cc7380d2f4f9b10d2d882be7cbe3  SingleWriter.tla
+15af1486c516bb91402c898f732dac8f9270ecad1f72bd27052f2caa29610649  SingleWriterLive.tla
+0acd29acc16eff0039ae4e70fcbefdcdffa92ae6841a475f3d19a3ae99f30ed7  Collaboration.tla
+c47d40f3f180a400610ab733ee76f5a11fc2deb83dc5c2921332f312a7962ea3  Workflow.tla

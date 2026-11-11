@@ -1,0 +1,10 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Recorded: 2026-11-11, Asia/Taipei; Java 17.0.13; one worker; breadth-first search.
+Config: SingleWriterNoDedupe.cfg; module: SingleWriter.tla
+Config renamed from NoDedupe.cfg without changing its contents.
+Fingerprint polynomial: 0; seed: 1.
+Error: Invariant NoDuplicateApply is violated.
+Trace projection (11 states): receive id 1 -> flush -> reply lost/delayed -> receive duplicate id 1 -> flush. disk.log = <<1, 1>>. The mutation also bypasses the stale-base guard on the erroneous retry path.
+1166 states generated, 360 distinct states found, 82 states left on queue.
+The depth of the complete state graph search is 11.
+PROCESS_EXIT_CODE=12

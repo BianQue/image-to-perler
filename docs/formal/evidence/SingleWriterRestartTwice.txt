@@ -1,0 +1,9 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Recorded: 2026-11-11, Asia/Taipei; Java 17.0.13; one worker; breadth-first search.
+Config: SingleWriterRestartTwice.cfg; module: SingleWriter.tla
+Config renamed from RestartTwice.cfg without changing its contents.
+Fingerprint polynomial: 0; seed: 1.
+Model checking completed. No error has been found.
+450001 states generated, 93443 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 27.
+PROCESS_EXIT_CODE=0

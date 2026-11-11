@@ -154,3 +154,103 @@ java -XX:+UseParallelGC -cp ../../.tmp/formal-tools/tla2tools.jar tlc2.TLC -work
 将第一条的配置替换为 `EarlyAck.cfg`、`ValueUndo.cfg`、`StaleCommit.cfg` 可重现反例。反例运行应返回不变量违反（退出码 12），正常配置应返回 0。
 
 去除本机路径的日志位于 [`evidence/`](evidence/)。日志保留状态计数、工具版本和反例轨迹。TLC 采用状态指纹，日志包含指纹碰撞的概率估计；不将其表述为数学上的无限状态证明。
+
+
+## SingleWriter 扩展模型
+
+2026-11-12 补充，状态为 Proposed。协议与三种中断窗口见 [浏览器单写者的持久化与恢复](../single-writer-recovery.md)，完整动作、变量、变异守卫及边界见 [模型索引](single-writer-notes.md)，实现后的验收见 [故障注入与浏览器清单](../single-writer-recovery-tests.md)。本次只修改设计文档和形式模型，不改变工作台行为。
+
+`SingleWriter.tla` 将页面、浏览器本地待发记录、服务易失队列、服务磁盘和消息信道分开。它允许消息丢失、重复与跨重连乱序，两个标签页、旧页面唤醒，以及有限次数的页面和服务崩溃。磁盘仍假设完整记录原子持久化，不能据此声称 Node、IndexedDB 或真实文件系统已通过验收。
+
+安全主配置检查 `AcknowledgedIsDurable`、`NoLostAckedOp`、`NoDuplicateApply`、`SingleActiveWriter`、`NoSilentOverwrite`、`ProjectIdentity`、`ConvergenceAfterRecovery`、`BrowserReplayConsistent` 和 `TypeOK`。其中收敛性质是当前获授写入权且没有待确认操作时的一致性不变量，不是任意故障下必定恢复的保证。
+
+主配置为两个标签页、两个操作、两个世代、每标签页最多两个请求代次，页面崩溃总数及服务崩溃次数各最多两次，最多两个不同的在途消息。`SingleWriterRestartTwice` 另以一个标签页、一个操作、三个世代和三个请求代次检查两次完整页面重开周期。所有安全配置关闭死锁检查，预算耗尽或冲突阻断不能当作活性通过。
+
+`SingleWriterLive.tla` 在稳定恢复后缀检查 `EventualReconciliation`。它的 8 种初态覆盖页面和服务各自运行或崩溃，以及操作尚未持久化或已经持久化。之后不再有新修改、接管、丢包或崩溃，各发送、接收、重开、重启、写盘及回执动作满足弱公平。它没有证明主模型在无限故障或永久冻结下最终恢复。
+
+### 配置与实测结果
+
+新增配置统一使用 `SingleWriter` 前缀，避免覆盖原来的 `EarlyAck.cfg`。所有配置文件均逐字保留本次研究运行时的内容，仅改文件名。工具为相同 SHA-256 的官方 TLA+ v1.7.4 JAR、TLC 2.19、Java 17.0.13，单 worker 广度优先。日期均为 Asia/Taipei。
+
+下表记录 2026-11-11 的完整研究运行。两个指纹多项式都穷尽同一主状态空间，没有通过设置状态上限或模拟轨迹代替穷尽检查。反例在首个错误处停止，其状态数不是全部可达状态数。裁剪后的摘要与反例投影在 [evidence/](evidence/)，未提交运行缓存或本地路径。
+
+| 配置 | 预期 | 实际 | 生成状态 | 不同状态 | 深度 | 退出码 |
+| --- | --- | --- | ---: | ---: | ---: | ---: |
+| [SingleWriter](evidence/SingleWriter.txt) | 通过 | 通过 | 47,596,079 | 7,470,612 | 32 | 0 |
+| [SingleWriterFP1](evidence/SingleWriterFP1.txt) | 通过 | 通过 | 47,596,079 | 7,470,612 | 32 | 0 |
+| [SingleWriterRestartTwice](evidence/SingleWriterRestartTwice.txt) | 通过 | 通过 | 450,001 | 93,443 | 27 | 0 |
+| [SingleWriterIdentity](evidence/SingleWriterIdentity.txt) | 通过 | 通过 | 210,673 | 41,355 | 28 | 0 |
+| [SingleWriterLive](evidence/SingleWriterLive.txt) | 通过 | 通过 | 194 | 112 | 14 | 0 |
+| [SingleWriterEarlyAck](evidence/SingleWriterEarlyAck.txt) | 失败 | AcknowledgedIsDurable | 609 | 227 | 9 | 12 |
+| [SingleWriterNoFence](evidence/SingleWriterNoFence.txt) | 失败 | SingleActiveWriter | 10,197 | 3,283 | 9 | 12 |
+| [SingleWriterNoDedupe](evidence/SingleWriterNoDedupe.txt) | 失败 | NoDuplicateApply | 1,166 | 360 | 11 | 12 |
+| [SingleWriterFilename](evidence/SingleWriterFilename.txt) | 失败 | ProjectIdentity | 24 | 15 | 4 | 12 |
+| [SingleWriterGrantRace](evidence/SingleWriterGrantRace.txt) | 失败 | SingleActiveWriter | 22,451 | 6,473 | 10 | 12 |
+| [SingleWriterCoverBrowserTwice](evidence/SingleWriterCoverBrowserTwice.txt) | 可达见证 | 可达 | 37,585 | 10,954 | 13 | 12 |
+| [SingleWriterCoverServiceTwice](evidence/SingleWriterCoverServiceTwice.txt) | 可达见证 | 可达 | 61,483 | 17,150 | 14 | 12 |
+| [SingleWriterCoverBrowserAhead](evidence/SingleWriterCoverBrowserAhead.txt) | 可达见证 | 可达 | 3,471 | 1,255 | 9 | 12 |
+| [SingleWriterCoverServiceAhead](evidence/SingleWriterCoverServiceAhead.txt) | 可达见证 | 可达 | 57,430 | 16,097 | 14 | 12 |
+
+`SingleWriterFP1` 使用指纹多项式 1，其余研究配置使用多项式 0，seed 均为 1。状态指纹仍有碰撞风险，重复多项式检查也不是无限状态数学证明。
+
+### 反例对协议的约束
+
+- `SingleWriterEarlyAck` 在服务写盘前让页面显示成功。
+- `SingleWriterNoFence` 允许已失去写入权的旧页面提交新操作。
+- `SingleWriterNoDedupe` 将已知 ID 再次施加为修改，日志出现重复 ID。此变异还放宽了错误重试分支的基础版本守卫，不能据此声称只删除缓存且保留严格 baseRev 检查也必然双写。正确协议对重复 ID 返回原持久结果。
+- `SingleWriterFilename` 把 Q 项目的页面绑定到 P 项目历史。
+- `SingleWriterGrantRace` 先接收 A 的 epoch 1 操作，再授予 B epoch 2，最后才把 A 的旧操作写盘。仅在接收时检查 epoch 不够，世代交接与提交持久化必须共用项目队列。此变异同时放宽交接时机和写盘前检查，不是单行守卫变异。
+
+五个负例的完整轨迹分别为 9、9、11、4、10 个状态，证据只保留决定性动作投影。`SingleWriterCover*` 故意断言恢复目标不可达，退出 12 表示找到了见证，不是正向协议失败。正向配置没有发现安全性反例。
+
+### 从仓库布局复现
+
+在仓库根目录准备工具，二进制和运行缓存保存在已有忽略目录 `.wip/`。需要 Java 17 或更高版本、curl，以及 sha256sum。
+
+```sh
+mkdir -p .wip/formal-tools
+curl -fL https://github.com/tlaplus/tlaplus/releases/download/v1.7.4/tla2tools.jar \
+  -o .wip/formal-tools/tla2tools.jar
+printf '%s  %s\n' \
+  936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88 \
+  .wip/formal-tools/tla2tools.jar | sha256sum -c -
+cd docs/formal
+java -Xmx2g -XX:+UseParallelGC -cp ../../.wip/formal-tools/tla2tools.jar \
+  tlc2.TLC -workers 1 -seed 1 -fp 0 \
+  -metadir ../../.wip/formal-tools/recheck-single-writer \
+  -config SingleWriter.cfg SingleWriter.tla
+```
+
+较小的安全配置使用 `SingleWriterRestartTwice.cfg`，仍运行 `SingleWriter.tla`。活性配置使用 `SingleWriterLive.cfg SingleWriterLive.tla`。若重跑 `SingleWriterFP1.cfg`，将 `-fp 0` 改为 `-fp 1`。各次运行使用不同的 `-metadir` 目录。
+
+以下命令验证负例与原模型。负例预期退出 12，脚本明确接受该状态，不把任何其他退出码当成通过。
+
+```sh
+status=0
+java -Xmx2g -XX:+UseParallelGC -cp ../../.wip/formal-tools/tla2tools.jar \
+  tlc2.TLC -workers 1 -seed 1 -fp 0 \
+  -metadir ../../.wip/formal-tools/recheck-single-writer-early-ack \
+  -config SingleWriterEarlyAck.cfg SingleWriter.tla || status=$?
+test "$status" -eq 12 || exit 1
+java -Xmx2g -XX:+UseParallelGC -cp ../../.wip/formal-tools/tla2tools.jar \
+  tlc2.TLC -workers 1 -seed 1 -fp 0 \
+  -metadir ../../.wip/formal-tools/recheck-original-collaboration \
+  -config Collaboration.cfg Collaboration.tla
+```
+
+同一模型的其他配置可替换第一条命令的 `-config` 参数。`SingleWriterCover*` 也预期退出 12；正常安全配置及活性配置预期退出 0。原模型没有更改，已有 `EarlyAck`、`StaleCommit` 和 `ValueUndo` 仍应找到各自反例。
+
+
+### 本次仓库布局复测
+
+2026-11-12（Asia/Taipei）从本分支的 `docs/formal/` 运行上面的相对路径命令，重新检查完整 `SingleWriter.cfg`，没有改用较小配置。工具 JAR 放在忽略目录 `.wip/`，未提交。实际计数如下。
+
+| 配置 | 预期 | 实际 | 生成状态 | 不同状态 | 深度 | 退出码 |
+| --- | --- | --- | ---: | ---: | ---: | ---: |
+| SingleWriter | 通过 | 通过，队列耗尽 | 47,596,079 | 7,470,612 | 32 | 0 |
+| SingleWriterEarlyAck | 失败 | AcknowledgedIsDurable | 609 | 227 | 9 | 12 |
+| Collaboration | 通过 | 通过，队列耗尽 | 616 | 332 | 10 | 0 |
+
+同次还复测了单写者的重复恢复、身份、活性、其余负例、全部覆盖见证，以及原有 Workflow、EarlyAck、StaleCommit、ValueUndo，共 18 个配置。全部符合预期，计数与前文研究运行相同。逐配置计数及模型 SHA-256 见 [仓库布局复测摘要](evidence/SingleWriter-layout-recheck.txt)。`SingleWriterFP1` 未在此次整理中重跑，上表明确保留的是 2026-11-11 的第二指纹多项式结果。
+
+以上结果验证本次提交的模型和配置能够从仓库布局复现，不代表应用故障注入或 Playwright 验收通过。
