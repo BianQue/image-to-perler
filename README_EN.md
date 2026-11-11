@@ -8,6 +8,12 @@ The workbench builds into a single HTML file that opens directly in a browser, e
 
 [中文文档](README.md) · [Usage and development](docs/development.md) · [Palette sources](docs/palette-provenance.md) · [Verification record](docs/implementation-review.md)
 
+## Workbench overview
+
+[![Bead Workshop: pattern settings, editing tools, 3D preview, and color usage](examples/cat/workbench.png)](examples/cat/workbench.png)
+
+Set pattern dimensions and a brand palette, edit the design, and inspect the 3D preview and bead counts. This screenshot shows Sikang on a 78×78 grid using Artkal C: 3,036 beads and 24 colors. The heart was added with the brush after conversion. Click the image to view it at full resolution.
+
 ## From a cat photo to a bead pattern
 
 | Original photo | Pixel-art source | Bead preview |

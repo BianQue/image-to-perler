@@ -8,6 +8,12 @@
 
 [English](README_EN.md) · [使用与开发说明](docs/development.md) · [色板来源](docs/palette-provenance.md) · [验收记录](docs/implementation-review.md)
 
+## 工作台一览
+
+[![拼豆工坊工作台：图纸设置、编辑工具、3D 预览和颜色用量](examples/cat/workbench.png)](examples/cat/workbench.png)
+
+设置图纸与品牌色板，编辑图案，查看 3D 效果和用豆数量。图中为司康的 78×78 格 Artkal C 图纸，共 3,036 颗、24 色；红心为转换后使用画笔添加。点击图片可查看原图。
+
 ## 看看一张猫咪照片如何变成图纸
 
 | 原始照片 | 像素底稿 | 拼豆效果预览 |
