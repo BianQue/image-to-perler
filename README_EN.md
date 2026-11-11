@@ -1,69 +1,125 @@
-# image-to-perler
+# Image to Perler · Bead Workshop
 
-Turn images into editable, portable bead projects.
+**Turn your favorite images into bead patterns you can edit, preview, and save.**
 
-This independent rewrite uses TypeScript, Vite, and three.js. Its delivery target is a single offline HTML workbench with brand palettes, 3D previews, advanced editing, and a Trae Skill entry point. It requires no account or public backend.
+Image to Perler is an open-source tool that runs locally. Import an image, choose a brand palette and pattern dimensions, and generate a bead pattern. Refine the details with brushes, selections, and fill tools, check material quantities, and export the pattern for assembly.
 
-**Initial public version.** Includes image conversion, rectangle/lasso selection, move/fill/delete, palette remapping, undo/redo, 3D grid editing, and a visual melting preview. The main agent reviewed the source and ran automated checks and Chromium offline save/reopen verification. See the [verification record](docs/implementation-review.md) for coverage and limitations.
+The workbench builds into a single HTML file that opens directly in a browser, even offline. Image processing and editing happen on your device, with no account required and no need to upload images to a server.
 
-[中文文档](README.md) · [Contributing](CONTRIBUTING.md) · [Development guide](docs/development.md)
+[中文文档](README.md) · [Usage and development](docs/development.md) · [Palette sources](docs/palette-provenance.md) · [Verification record](docs/implementation-review.md)
 
-## Build the offline workbench
+## About the project
 
-Install Node.js 24. Run these commands from the repository root:
+Turning an image into a finished bead piece often requires adjusting colors, refining outlines, counting beads, and tracking assembly progress. Image to Perler brings these steps into one workbench so generated patterns remain editable and useful throughout the process.
+
+It is designed for:
+
+- **Bead hobbyists** who want to convert pixel art, illustrations, or photos into patterns and refine them before assembly.
+- **Pattern creators** who need to edit parts of a design, switch brand palettes, and export patterns and material lists.
+- **Developers and AI tool users** who want to extend the open-source code or use the Trae Skill to help create patterns.
+
+Photos can be resized and reduced to a limited palette, but this does not automatically produce polished pixel art or perform general-purpose background removal. Images with clear outlines and simple backgrounds are usually easier to work with.
+
+## Features
+
+| Feature | Description |
+| --- | --- |
+| Image conversion | Set width, height, brand palette, and maximum color count to generate a bead grid |
+| Transparency | Transparent cells mean no bead; opaque white remains a valid bead color |
+| Basic editing | Brush, eraser, fill, color picker, replace matching colors, and Shift straight lines |
+| Selection editing | Rectangle and lasso selections with move, fill, and delete operations |
+| Pattern adjustments | Horizontal/vertical flips, 90° rotation, canvas resizing, and isolated-bead removal |
+| Palette remapping | Map an existing pattern to another palette using nearest RGB colors |
+| Assembly tools | Color-code labels, color filtering, usage counts, and per-cell completion marks |
+| 3D preview and editing | Rotate and zoom the bead model, and edit cells in the 3D view |
+| Melting appearance preview | Adjust hole size, thickness, and outer diameter for an approximate fused appearance |
+| Save and export | Project JSON, offline HTML with the project, PNG, usage CSV, and printing |
+| Undo and recovery | Undo/redo and explicit restoration of a local draft |
+
+Selections are created and moved in the 2D view. The melting preview is a visual approximation; it does not predict temperatures, ironing times, or physical material fusion.
+
+## Quick start
+
+Install **Node.js 24**, then run:
 
 ```bash
+git clone https://github.com/BianQue/image-to-perler.git
+cd image-to-perler
 npm ci
-npm run typecheck
-npm test
 npm run build
 ```
 
-Open `dist/index.html` in a browser. Dependency installation needs network access. The delivery requirement is an HTML file with embedded runtime resources, without a development server or CDN. Test the built file offline before release.
+After building, open `dist/index.html` directly in your browser.
 
-Use `npm run dev` for development.
+Installing dependencies requires an internet connection. The built workbench works offline. The 3D features require a browser with WebGL support.
 
-## Save a project
+## Create a pattern from an image
 
-Versioned Project JSON is the persistent format. An HTML file can contain a project snapshot, but it does not replace the project file.
+1. Set the pattern width, height, brand palette, and maximum color count.
+2. Click the image import and conversion button to select a local image.
+3. Refine the pattern with brushes, fills, or selection tools.
+4. Review color usage and switch to the 3D view as needed.
+5. Save a Project JSON file and export PNG, CSV, or offline HTML.
+6. Use completion marks to track assembled cells while making the piece.
 
-- Cells use global project coordinates. Physical boards define layout and assembly sections.
-- `null` means no bead. A white bead is a separate, valid color.
-- Color IDs belong to a brand and series. Equal RGB values do not make two IDs equivalent.
-- Assembly progress is stored per cell, separately from color edits.
+Images are scaled to the specified width and height. To avoid distortion, preserve the original aspect ratio or crop the image first.
 
-Follow the current interface for editing and exports. Export your project before closing the page. Browser state is not a saved file. The [development guide](docs/development.md) describes the data contract.
+## Save your work
 
-## Use the Trae Skill
+**Use Project JSON for long-term storage.**
 
-Place the repository in your project's `.trae/skills/image-to-perler` directory, or the personal skills directory supported by your Trae version. Enable it, provide an image you have permission to use, and specify the size and palette requirements.
+A project file stores pattern dimensions, the palette, cell color IDs, empty cells, and assembly progress. Reopen it later to continue editing.
 
-[SKILL.md](SKILL.md) defines the agent workflow. The new workbench and Python experiment use different output formats.
+- **Project JSON**: Save your work and continue editing later.
+- **Offline HTML**: Includes the workbench and a snapshot of the current project for opening on another computer.
+- **PNG**: View, share, or print the pattern.
+- **CSV**: Check color IDs and bead quantities.
+- **Local draft**: Temporary recovery, not a replacement for a downloaded project file.
 
-## Palettes and physical beads
+Physical board size controls grid divisions without changing global cell coordinates.
 
-The repository includes 12 MIT-licensed source palettes (1,315 color entries) from `beadcolors`, with its license notice. These are third-party screen-color data, not manufacturer certification or a guarantee of physical color equivalence.
+## Brand palettes and colors
 
-Redistribution permission for MARD tiers and domestic-brand mappings remains unresolved. These data are excluded from the workbench's built-in palettes. The root `data/` directory contains ignored local research materials and is excluded from the public repository and build. Use an authorized JSON palette for custom data. See [palette provenance and the import format](docs/palette-provenance.md). Compare physical color charts before buying beads and allow for loss.
+The workbench includes **12 palettes with 1,315 color entries** from `beadcolors`, covering series from Artkal, Hama, Perler, Nabbi, and Yant.
 
-## Run the Python experiment
+These community-collected screen colors are not manufacturer-certified. Displays, physical bead batches, and ironing can affect the final appearance. Check physical color charts before buying materials.
 
-The independent converter in `scripts/` is retained for experiments. It is not the build entry point for the new workbench. Pillow produces multiple grid sizes, generic color IDs, CSV files, previews, and an experimental HTML editor. Its `boards.json` is not Project v1.
+You can import JSON palettes that you have compiled or have permission to use.
 
-Install Python 3.10 or later. Run from the repository root:
+See [palette provenance](docs/palette-provenance.md) for sources, licenses, and the import format.
 
-```bash
-python -m pip install -r requirements.txt
-python -m scripts.cli input.png output/my-pattern --boards 36,52,78 --default-size 52 --max-colors 16
-python -m scripts.cli --help
+## Use with Trae
+
+The repository provides [SKILL.md](SKILL.md) for use as a Trae Skill. Place the repository in your project's `.trae/skills/image-to-perler` directory, or the personal skills directory supported by your Trae version, and enable it accordingly.
+
+Example prompt:
+
+```text
+Use image-to-perler to turn this image into a 52×52 bead pattern.
+Use the Perler Midi palette with at most 16 colors.
+Preserve transparent areas and export an editable project,
+offline HTML, and a bead usage list.
 ```
 
-The output directory must not exist. Open `output/my-pattern/output/pattern.html` for the experimental editor. IDs such as `C01` are not native brand codes.
+Explicitly request AI redrawing if you need it. Image conversion itself performs resizing and palette mapping; it is not AI pixel-art redrawing.
 
-Transparent inputs use alpha to identify empty cells. For opaque inputs, the default removes only near-white areas connected to an edge. This is not general-purpose background removal. Use `--background none` to retain all nontransparent pixels.
+## Development and verification
 
-## License and examples
+Built with **TypeScript · Vite · Three.js · Vitest**.
 
-Code is under the [MIT License](LICENSE). Third-party palettes retain their license notices. Dependencies, including three.js, have their own licenses. The independent rewrite does not copy the old framework, fonts, or icons.
+```bash
+npm run dev        # Start the development server
+npm run typecheck  # Check types
+npm test           # Run core behavior tests
+npm run build      # Build the single-file offline workbench
+```
 
-The [cat example notice](examples/cat/README.md) records the maintainer's permission statement. The original permission source has not been reverified during this rewrite and requires confirmation before release. These Python-generated examples do not establish acceptance of the new workbench.
+Verification includes core tests and Chromium checks for local-file opening, offline save/reopen, selected 2D/3D editing operations, and exports. See the [verification record](docs/implementation-review.md) for coverage and remaining gaps.
+
+Issues and improvement suggestions are welcome. See the [contribution guide](CONTRIBUTING.md) to get involved.
+
+## License
+
+Project code is licensed under the [MIT License](LICENSE).
+
+Third-party palettes and dependencies retain their own copyrights and licenses. See the [cat example documentation](examples/cat/README.md) for its image permission statement. When creating or sharing patterns from other images, make sure you have the appropriate rights to use them.
