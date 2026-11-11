@@ -1,0 +1,157 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 21 and seed 5650225695763428997 with 1 worker on 32 cores with 7216MB heap and 64MB offheap memory [pid: 49536] (Windows 11 10.0 amd64, Microsoft 21.0.4 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file <repository>\docs\formal\Collaboration.tla
+Parsing file <temp>\Naturals.tla
+Parsing file <temp>\TLC.tla
+Parsing file <temp>\Sequences.tla
+Parsing file <temp>\FiniteSets.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module Collaboration
+Starting... (2026-11-11 18:08:58)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-11-11 18:08:59.
+Error: Invariant NoSilentOverwrite is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ humanSteps = 0
+/\ versions = <<0, 0>>
+/\ crashed = FALSE
+/\ bad = FALSE
+/\ structure = 0
+/\ diskCells = <<0, 0>>
+/\ cells = <<0, 0>>
+/\ before = 0
+/\ diskVersions = <<0, 0>>
+/\ afterVersion = 0
+/\ phase = "idle"
+/\ base = <<0, 0>>
+/\ ack = FALSE
+/\ baseStructure = 0
+/\ durableOp = FALSE
+
+State 2: <Plan line 20, col 3 to line 24, col 70 of module Collaboration>
+/\ humanSteps = 0
+/\ versions = <<0, 0>>
+/\ crashed = FALSE
+/\ bad = FALSE
+/\ structure = 0
+/\ diskCells = <<0, 0>>
+/\ cells = <<0, 0>>
+/\ before = 0
+/\ diskVersions = <<0, 0>>
+/\ afterVersion = 0
+/\ phase = "planned"
+/\ base = <<0, 0>>
+/\ ack = FALSE
+/\ baseStructure = 0
+/\ durableOp = FALSE
+
+State 3: <Prepare line 48, col 3 to line 54, col 43 of module Collaboration>
+/\ humanSteps = 0
+/\ versions = <<0, 0>>
+/\ crashed = FALSE
+/\ bad = FALSE
+/\ structure = 0
+/\ diskCells = <<0, 0>>
+/\ cells = <<0, 0>>
+/\ before = 0
+/\ diskVersions = <<0, 0>>
+/\ afterVersion = 0
+/\ phase = "prepared"
+/\ base = <<0, 0>>
+/\ ack = FALSE
+/\ baseStructure = 0
+/\ durableOp = FALSE
+
+State 4: <Persist line 65, col 3 to line 71, col 48 of module Collaboration>
+/\ humanSteps = 0
+/\ versions = <<0, 0>>
+/\ crashed = FALSE
+/\ bad = FALSE
+/\ structure = 0
+/\ diskCells = <<1, 0>>
+/\ cells = <<0, 0>>
+/\ before = 0
+/\ diskVersions = <<1, 0>>
+/\ afterVersion = 1
+/\ phase = "persisted"
+/\ base = <<0, 0>>
+/\ ack = FALSE
+/\ baseStructure = 0
+/\ durableOp = TRUE
+
+State 5: <Publish line 73, col 3 to line 77, col 80 of module Collaboration>
+/\ humanSteps = 0
+/\ versions = <<1, 0>>
+/\ crashed = FALSE
+/\ bad = FALSE
+/\ structure = 0
+/\ diskCells = <<1, 0>>
+/\ cells = <<1, 0>>
+/\ before = 0
+/\ diskVersions = <<1, 0>>
+/\ afterVersion = 1
+/\ phase = "committed"
+/\ base = <<0, 0>>
+/\ ack = TRUE
+/\ baseStructure = 0
+/\ durableOp = TRUE
+
+State 6: <Human line 28, col 3 to line 36, col 57 of module Collaboration>
+/\ humanSteps = 1
+/\ versions = <<2, 0>>
+/\ crashed = FALSE
+/\ bad = FALSE
+/\ structure = 0
+/\ diskCells = <<0, 0>>
+/\ cells = <<0, 0>>
+/\ before = 0
+/\ diskVersions = <<2, 0>>
+/\ afterVersion = 1
+/\ phase = "committed"
+/\ base = <<0, 0>>
+/\ ack = TRUE
+/\ baseStructure = 0
+/\ durableOp = TRUE
+
+State 7: <Human line 28, col 3 to line 36, col 57 of module Collaboration>
+/\ humanSteps = 2
+/\ versions = <<3, 0>>
+/\ crashed = FALSE
+/\ bad = FALSE
+/\ structure = 0
+/\ diskCells = <<1, 0>>
+/\ cells = <<1, 0>>
+/\ before = 0
+/\ diskVersions = <<3, 0>>
+/\ afterVersion = 1
+/\ phase = "committed"
+/\ base = <<0, 0>>
+/\ ack = TRUE
+/\ baseStructure = 0
+/\ durableOp = TRUE
+
+State 8: <Undo line 104, col 3 to line 111, col 52 of module Collaboration>
+/\ humanSteps = 2
+/\ versions = <<4, 0>>
+/\ crashed = FALSE
+/\ bad = TRUE
+/\ structure = 0
+/\ diskCells = <<0, 0>>
+/\ cells = <<0, 0>>
+/\ before = 0
+/\ diskVersions = <<4, 0>>
+/\ afterVersion = 1
+/\ phase = "undone"
+/\ base = <<0, 0>>
+/\ ack = TRUE
+/\ baseStructure = 0
+/\ durableOp = TRUE
+
+369 states generated, 228 distinct states found, 62 states left on queue.
+The depth of the complete state graph search is 8.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 5 and the 95th percentile is 4).
+Finished in 00s at (2026-11-11 18:08:59)
