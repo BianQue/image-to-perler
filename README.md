@@ -8,6 +8,38 @@
 
 [English](README_EN.md) · [使用与开发说明](docs/development.md) · [色板来源](docs/palette-provenance.md) · [验收记录](docs/implementation-review.md)
 
+## 看看一张猫咪照片如何变成图纸
+
+| 原始照片 | 像素底稿 | 拼豆效果预览 |
+| --- | --- | --- |
+| <img src="examples/cat/source.jpg" alt="猫咪原始照片" width="260"> | <img src="examples/cat/pixel.png" alt="透明背景猫咪像素底稿" width="260"> | <img src="examples/cat/generated/board-104/preview.png" alt="104×104 格猫咪拼豆预览" width="260"> |
+
+原始照片由维护者提供；像素底稿使用 Seedream 参考照片重绘并处理透明背景，再转换为拼豆网格。**AI 重绘是独立的素材准备步骤，不是转换器自动完成的功能。** 本组示例使用通用色号，展示从素材到图纸的流程，不代表品牌色号映射；下方 3D 对比图为新工作台的实际渲染截图。[素材与生成说明](examples/cat/README.md)
+
+### 同一底稿，不同尺寸
+
+| 36×36 格 · 671 颗 | 52×52 格 · 1,353 颗 | 104×104 格 · 4,976 颗 |
+| --- | --- | --- |
+| <img src="examples/cat/generated/board-36/preview.png" alt="36×36 格猫咪图案" width="240"> | <img src="examples/cat/generated/board-52/preview.png" alt="52×52 格猫咪图案" width="240"> | <img src="examples/cat/generated/board-104/preview.png" alt="104×104 格猫咪图案" width="240"> |
+
+三种方案均为 24 色。尺寸越大，通常能保留更多细节，也需要更多豆子；上图按相同显示宽度展示，便于比较细节，而非实际作品尺寸。
+
+### 3D 与熔豆外观对比
+
+| 3D 豆粒预览 · 熔豆程度 0 | 熔豆外观预览 · 熔豆程度 100 |
+| --- | --- |
+| <img src="examples/cat/generated/board-52/preview-3d.png" alt="猫咪图案的三维空心豆粒预览" width="420"> | <img src="examples/cat/generated/board-52/preview-melted.png" alt="相同视角下猫咪图案的熔豆外观预览" width="420"> |
+
+将同一份 52×52 格示例数据导入新工作台后，直接截取 Three.js 画布。两图保持相同视角、配色和 1,353 颗豆，仅调整熔豆程度，展示豆孔和厚度的变化。熔豆效果为外观模拟，不代表实际熨烫结果。
+
+### 最终图纸与用量
+
+下图由 52×52 格示例的真实网格数据绘制，格内数字对应通用色号 C01–C24，留白格不放豆。点击图片可查看大图。
+
+[![52×52 格猫咪编号施工图](examples/cat/generated/board-52/pattern-grid.png)](examples/cat/generated/board-52/pattern-grid.png)
+
+[下载网格 CSV](examples/cat/generated/board-52/grid.csv) · [查看用量清单](examples/cat/generated/board-52/usage.csv)
+
 ## 项目介绍
 
 从图片到实际拼豆，通常还需要调整颜色、修整轮廓、统计用量，并保存制作进度。拼豆工坊把这些步骤放在同一个工作台中，让生成的图纸能够继续修改和使用。

@@ -8,6 +8,38 @@ The workbench builds into a single HTML file that opens directly in a browser, e
 
 [中文文档](README.md) · [Usage and development](docs/development.md) · [Palette sources](docs/palette-provenance.md) · [Verification record](docs/implementation-review.md)
 
+## From a cat photo to a bead pattern
+
+| Original photo | Pixel-art source | Bead preview |
+| --- | --- | --- |
+| <img src="examples/cat/source.jpg" alt="Original cat photo" width="260"> | <img src="examples/cat/pixel.png" alt="Cat pixel art with transparent background" width="260"> | <img src="examples/cat/generated/board-104/preview.png" alt="104×104 cat bead preview" width="260"> |
+
+The maintainer provided the photo. The pixel-art source was redrawn with Seedream using the photo as a reference, given a transparent background, and then converted to bead grids. **AI redrawing is a separate preparation step, not an automatic converter feature.** These examples use generic color IDs to illustrate the workflow, not brand-palette mapping. The 3D comparison below contains actual rendering screenshots from the new workbench. See [source and generation details](examples/cat/README.md).
+
+### One source, different sizes
+
+| 36×36 cells · 671 beads | 52×52 cells · 1,353 beads | 104×104 cells · 4,976 beads |
+| --- | --- | --- |
+| <img src="examples/cat/generated/board-36/preview.png" alt="36×36 cat pattern" width="240"> | <img src="examples/cat/generated/board-52/preview.png" alt="52×52 cat pattern" width="240"> | <img src="examples/cat/generated/board-104/preview.png" alt="104×104 cat pattern" width="240"> |
+
+All three variants use 24 colors. Larger grids generally preserve more detail and require more beads. Previews are displayed at equal widths to compare detail, not physical dimensions.
+
+### 3D and melting appearance comparison
+
+| 3D bead preview · melt level 0 | Melting appearance · melt level 100 |
+| --- | --- |
+| <img src="examples/cat/generated/board-52/preview-3d.png" alt="3D preview of hollow beads forming the cat pattern" width="420"> | <img src="examples/cat/generated/board-52/preview-melted.png" alt="Melting appearance of the same cat pattern from the same camera angle" width="420"> |
+
+These screenshots capture the actual Three.js canvas after importing the same 52×52 example into the new workbench. Both retain the same camera angle, colors, and 1,353 beads; only the melt level changes to show differences in bead holes and thickness. This is a visual simulation, not a prediction of actual ironing results.
+
+### Final pattern and material list
+
+The numbered pattern below is rendered from the actual 52×52 example grid. Numbers correspond to generic IDs C01–C24; blank cells contain no bead. Click the image for the full-size view.
+
+[![52×52 numbered cat bead pattern](examples/cat/generated/board-52/pattern-grid.png)](examples/cat/generated/board-52/pattern-grid.png)
+
+[Download grid CSV](examples/cat/generated/board-52/grid.csv) · [View bead usage](examples/cat/generated/board-52/usage.csv)
+
 ## About the project
 
 Turning an image into a finished bead piece often requires adjusting colors, refining outlines, counting beads, and tracking assembly progress. Image to Perler brings these steps into one workbench so generated patterns remain editable and useful throughout the process.
