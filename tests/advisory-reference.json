@@ -1,0 +1,92 @@
+{
+ "disc-detail-16": {
+  "structure": 0.65689671,
+  "detail": 0.709740162,
+  "hueErrorDeg": 1.09290623,
+  "where": {
+   "x": 0.033203125,
+   "y": 0.525390625
+  }
+ },
+ "disc-detail-32": {
+  "structure": 0.765388131,
+  "detail": 0.83216244,
+  "hueErrorDeg": 0.50350346,
+  "where": {
+   "x": 0.853515625,
+   "y": 0.775390625
+  }
+ },
+ "disc-detail-64": {
+  "structure": 0.872073889,
+  "detail": 0.878447175,
+  "hueErrorDeg": 0.21981246,
+  "where": {
+   "x": 0.509765625,
+   "y": 0.943359375
+  }
+ },
+ "disc-detail-128": {
+  "structure": 1.00000155,
+  "detail": 0.999871492,
+  "hueErrorDeg": 1.60765184e-06,
+  "where": {
+   "x": 0.580078125,
+   "y": 0.923828125
+  }
+ },
+ "disc-flattened-32": {
+  "structure": 0.722227335,
+  "detail": 0.0424150378,
+  "hueErrorDeg": 0.474658817,
+  "where": {
+   "x": 0.654296875,
+   "y": 0.357421875
+  }
+ },
+ "disc-flattened-64": {
+  "structure": 0.807319939,
+  "detail": 0.0417173468,
+  "hueErrorDeg": 0.194793704,
+  "where": {
+   "x": 0.541015625,
+   "y": 0.361328125
+  }
+ },
+ "disc-shuffled-64": {
+  "structure": 0.0292983763,
+  "detail": 0.60103327,
+  "hueErrorDeg": 3.89803164,
+  "where": {
+   "x": 0.576171875,
+   "y": 0.333984375
+  }
+ },
+ "wide-detail-48": {
+  "structure": 0.85367316,
+  "detail": 0.986507416,
+  "hueErrorDeg": 0.315916271,
+  "where": {
+   "x": 0.876953125,
+   "y": 0.248387097
+  }
+ },
+ "wide-detail-96": {
+  "structure": 0.918847144,
+  "detail": 1.0,
+  "hueErrorDeg": 0.16511996,
+  "where": {
+   "x": 0.037109375,
+   "y": 0.493548387
+  }
+ },
+ "disc-emptied-64": {
+  "structure": 0.870410085,
+  "detail": 0.968453467,
+  "hueErrorDeg": 2.71205431,
+  "where": {
+   "x": 0.494140625,
+   "y": 0.947265625
+  }
+ }
+}
