@@ -449,3 +449,89 @@ java -Xmx2g -XX:+UseParallelGC -cp ../../.wip/formal-tools/tla2tools.jar \
   -metadir ../../.wip/formal-tools/recheck-preview-original-collaboration \
   -config Collaboration.cfg Collaboration.tla
 ```
+
+## LogBackup 扩展模型
+
+2026-11-12（Asia/Taipei）补充，状态为 Proposed。协议说明、两项仍未决定的产品选择与界限见 [检查点之后收旧日志，以及恢复备份时避免分叉：协议验证](../log-backup.md)。本次不实现应用功能，也不将不同模型的独立检查视为组合证明。本轮没有重跑 SingleWriter、SelectiveUndo 与 PreviewAccept。
+
+`LogBackup.tla` 把检查点、压缩、备份和恢复写成动作。日志是恢复真源，检查点只是可重建的加速缓存。压缩只能丢掉严格早于一份已经持久保存的检查点的前缀，并且未确认提交不得再依赖这段前缀。压缩后，用检查点加重放后缀，必须得到与压缩前相同的作品状态。备份复制项目身份和当时可恢复的镜像。`RestoreMatching` 只在身份一致、且备份是现场可恢复日志的前缀时启用，此时是空操作，不得把现场回退。身份不符、分叉，或备份带有无法证明属于同一条日志的额外后缀，进入第 4 类硬停止，不得改写现场日志。压缩被拒绝不是第 4 类。`AllowCompactBeforeDurable`、`AllowCompactWithUnacked` 和 `AllowRestoreStaleOrDivergent` 只为反例打开。`AllowExplicitReplace` 只为开放选项的可达性见证打开，不是产品默认。
+
+主探索最多 3 条操作；定向路径把上限放到 4。这是有限穷举，不是任意长日志或真实磁盘的数学证明。压缩之后，被丢掉前缀里的操作还能不能做选择性撤销，以及人能不能明确用备份整份替换现有项目，本轮都不选定默认策略。保留多久也仍待评审。
+
+### 配置、预期与仓库布局实测
+
+所有新配置均使用 `LogBackup` 前缀。模型与配置放入 `docs/formal/` 后保持字节一致。本次在本分支的 `docs/formal/` 用相对路径重跑全部 18 个新配置，另将原 `Collaboration.cfg` 作为低成本健全性检查重跑一次，共 19 项，均符合预期。工具为与本分支 SingleWriter、SelectiveUndo、PreviewAccept 相同 SHA-256 的官方 v1.7.4 JAR、TLC 2.19（08 August 2024，rev: 5a47802）、Java 17.0.13，1 worker、seed 20261112、fp 0。仓库布局复测于 2026-11-12 16:45:35 至 16:45:51（Asia/Taipei）完成，整组用时 15.66 秒，主探索 TLC 报告用时 01s。
+
+下表全部为本次仓库布局运行的真实数字。负例与见证在指定不变量首次违反时停止，exit 12 是预期结果，不是正向协议失败或工具崩溃。它们的深度不能解释为完整空间的最大深度。各配置摘要与短轨迹只保留决定性投影，不提交完整日志或缓存。
+
+| 配置 | 预期 | 实际 | 生成状态 | 不同状态 | 深度 | exit |
+|---|---|---|---:|---:|---:|---:|
+| [LogBackupPositive](evidence/LogBackupPositive.txt) | 通过 | 通过，队列耗尽 | 65994 | 7653 | 12 | 0 |
+| [LogBackupPositiveCompact](evidence/LogBackupPositiveCompact.txt) | 通过 | 通过，队列耗尽 | 12 | 6 | 6 | 0 |
+| [LogBackupPositiveRestore](evidence/LogBackupPositiveRestore.txt) | 通过 | 通过，队列耗尽 | 12 | 6 | 6 | 0 |
+| [LogBackupPositiveRejectFork](evidence/LogBackupPositiveRejectFork.txt) | 通过 | 通过，队列耗尽 | 10 | 5 | 5 | 0 |
+| [LogBackupPositiveRejectIdentity](evidence/LogBackupPositiveRejectIdentity.txt) | 通过 | 通过，队列耗尽 | 8 | 4 | 4 | 0 |
+| [LogBackupPositiveRejectKeepsJournal](evidence/LogBackupPositiveRejectKeepsJournal.txt) | 通过 | 通过，队列耗尽 | 10 | 5 | 5 | 0 |
+| [LogBackupPositiveCompactThenRestore](evidence/LogBackupPositiveCompactThenRestore.txt) | 通过 | 通过，队列耗尽 | 16 | 8 | 8 | 0 |
+| [LogBackupWitnessCompact](evidence/LogBackupWitnessCompact.txt) | 见证 NotLegalCompact | NotLegalCompact | 10 | 6 | 6 | 12 |
+| [LogBackupWitnessRestore](evidence/LogBackupWitnessRestore.txt) | 见证 NotLegalRestore | NotLegalRestore | 10 | 6 | 6 | 12 |
+| [LogBackupWitnessRejectFork](evidence/LogBackupWitnessRejectFork.txt) | 见证 NotRejectFork | NotRejectFork | 8 | 5 | 5 | 12 |
+| [LogBackupWitnessRejectIdentity](evidence/LogBackupWitnessRejectIdentity.txt) | 见证 NotRejectIdentity | NotRejectIdentity | 6 | 4 | 4 | 12 |
+| [LogBackupWitnessRejectKeepsJournal](evidence/LogBackupWitnessRejectKeepsJournal.txt) | 见证 NotRejectKeepsJournal | NotRejectKeepsJournal | 8 | 5 | 5 | 12 |
+| [LogBackupWitnessCompactThenRestore](evidence/LogBackupWitnessCompactThenRestore.txt) | 见证 NotCompactThenRestore | NotCompactThenRestore | 14 | 8 | 8 | 12 |
+| [LogBackupWitnessExplicitReplace](evidence/LogBackupWitnessExplicitReplace.txt) | 见证 NotExplicitReplace | NotExplicitReplace | 12 | 7 | 7 | 12 |
+| [LogBackupNegativeCompactBeforeDurable](evidence/LogBackupNegativeCompactBeforeDurable.txt) | 反例 RecoverableMatchesHist | RecoverableMatchesHist | 10 | 6 | 6 | 12 |
+| [LogBackupNegativeCompactUnacked](evidence/LogBackupNegativeCompactUnacked.txt) | 反例 UnackedNotStranded | UnackedNotStranded | 10 | 6 | 6 | 12 |
+| [LogBackupNegativeRestoreStale](evidence/LogBackupNegativeRestoreStale.txt) | 反例 RecoverableMatchesHist | RecoverableMatchesHist | 10 | 6 | 6 | 12 |
+| [LogBackupNegativeRestoreDivergent](evidence/LogBackupNegativeRestoreDivergent.txt) | 反例 NoFork | NoFork | 8 | 5 | 5 | 12 |
+| Collaboration（健全性检查） | 通过 | 通过，队列耗尽 | 616 | 332 | 10 | 0 |
+
+[布局复测摘要](evidence/LogBackup-layout-recheck.txt)保留全部计数与模型哈希。18 项中的 7 个正向配置 exit 0，7 个覆盖见证与 4 个错误变体 exit 12，原 Collaboration 健全性检查 exit 0。不同配置状态空间重叠，不求和。此前一次本地检查使用了同一份官方 2.19 JAR；本次公开发布的数字全部来自上述仓库布局复测，18 项计数与那次结果一致。
+
+### 反例与覆盖见证
+
+- `LogBackupNegativeCompactBeforeDurable` 在检查点尚未持久时就丢掉旧前缀，可恢复日志只剩下后缀，与完整历史不一致。
+- `LogBackupNegativeCompactUnacked` 在未确认提交的基础前缀仍短于将被丢掉的那段时压缩，这条恢复路径无法再核对基础前缀。
+- `LogBackupNegativeRestoreStale` 把较早的前缀备份写回已经继续追加的现场日志，已经追加的后缀从可恢复镜像里消失。
+- `LogBackupNegativeRestoreDivergent` 未做前缀核对，就把分叉备份写进现场日志。
+
+`LogBackupWitnessCompact` 证明合法压缩可达：先打好持久检查点，再追加，再收掉旧前缀，用检查点加重放后缀仍得到压缩前的作品状态。`WitnessRestore` 证明备份已是现场前缀时，匹配恢复不改现场。`WitnessRejectFork` 与 `WitnessRejectIdentity` 证明分叉和身份不符会硬停止，且不改现场日志。`WitnessRejectKeepsJournal` 证明拒绝后未确认记录仍在。`WitnessCompactThenRestore` 证明压缩后再备份可恢复镜像，匹配恢复仍不改现场。`WitnessExplicitReplace` 只证明受开关控制的显式替换可以走到，不是产品默认。
+
+### 相对路径复现
+
+先按本文件 SingleWriter 节的工具下载及 SHA-256 命令，将官方 JAR 放入仓库忽略目录 `.wip/formal-tools/`。下面从仓库根目录开始，Java 17 或更高版本即可运行。JAR 与输出日志均不纳入版本控制。每个配置使用不同的缓存目录。
+
+```sh
+cd docs/formal
+java -Xmx2g -XX:+UseParallelGC -cp ../../.wip/formal-tools/tla2tools.jar \
+  tlc2.TLC -workers 1 -seed 20261112 -fp 0 \
+  -metadir ../../.wip/formal-tools/recheck-log-backup-positive \
+  -config LogBackupPositive.cfg LogBackup.tla
+```
+
+全量复现时，下面的退出码检查不吞掉运行错误；对 exit 12 的结果，还需按表核对指定的不变量名。
+
+```sh
+for cfg in LogBackup*.cfg; do
+  case "$cfg" in
+    LogBackupNegative*|LogBackupWitness*) expected=12 ;;
+    *) expected=0 ;;
+  esac
+  status=0
+  java -Xmx2g -XX:+UseParallelGC -cp ../../.wip/formal-tools/tla2tools.jar \
+    tlc2.TLC -workers 1 -seed 20261112 -fp 0 \
+    -metadir "../../.wip/formal-tools/recheck-${cfg%.cfg}" \
+    -config "$cfg" LogBackup.tla \
+    > "../../.wip/formal-tools/${cfg%.cfg}.log" 2>&1 || status=$?
+  test "$status" -eq "$expected" || exit 1
+done
+```
+
+本轮如需重复 Collaboration 健全性检查，可另用独立缓存目录运行原配置，不与上表 18 项的状态数相加：
+
+```sh
+java -Xmx2g -XX:+UseParallelGC -cp ../../.wip/formal-tools/tla2tools.jar \
+  tlc2.TLC -workers 1 -seed 20261112 -fp 0 \
+  -metadir ../../.wip/formal-tools/recheck-logbackup-original-collaboration \
+  -config Collaboration.cfg Collaboration.tla
+```
