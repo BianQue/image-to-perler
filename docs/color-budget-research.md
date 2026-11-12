@@ -30,3 +30,5 @@ The existing 80/100 rubric is a project decision, not a scientifically validated
 ## Limits
 
 No interactive conversion, user study, or runtime change was performed. Evidence does not establish a universal best color count, nor prove that adaptive search outperforms a fixed default for this project's users.
+
+A separate offline comparison of a fixed whole-image preprocessing pipeline is in [image-preprocess-research.md](image-preprocess-research.md). It does not change the color budget.
