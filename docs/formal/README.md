@@ -361,3 +361,91 @@ node docs/formal/SelectiveUndoSourceCheck.mjs
 ```
 
 本次实际 13 项通过，见 [源码检查摘要](evidence/SelectiveUndo-source-check.txt)。检查直接导入 `src/core.ts`，换板部分抽取 `src/main.ts` 的原始 handler，在固定本地输入上运行。它确认 paint 改色清 completed、map-palette 保留 completed、非方图几何映射及条件命令重执行的差异，不构成应用选择性撤销或浏览器端到端测试。Node 的类型剥离实验性提示不是测试失败。
+
+## PreviewAccept 扩展模型
+
+2026-11-12（Asia/Taipei）补充，状态为 Proposed。协议说明、冲突分类沿用方式、过期策略与界限见 [预览后由人选择：协议验证](../preview-accept.md)。本次不实现应用功能，也不将不同模型的独立检查视为组合证明。本轮没有重跑 SelectiveUndo 与 SingleWriter。
+
+`PreviewAccept.tla` 在既有选择性撤销的格子、坐标提升、版本守卫和补偿写法上，增加一份方案覆盖层。预览只写覆盖层，不追加持久日志，也不改图纸、色板、完成标记、项目身份或 epoch。拒绝丢掉覆盖层后，持久状态必须与拒绝前一致。接受必须对当前前缀重新推导：有可恢复格子时，把 `Compensate` 作为普通的、之后仍可撤销的写入追加到同一条日志；否则只返回第 2 或第 3 类冲突，不写盘。`AcceptStale` 只在 `AllowStaleAccept = TRUE` 时启用，用来产生反例；好协议禁止把旧前缀上算出的补偿直接应用。第 4 类仍只用于硬停止，预览机制不得制造第 4 类。
+
+主探索限 3×2 格子、颜色 0 到 2、最多 3 条历史操作、最多 2 次预览类动作。定向路径把历史放到最多 4 条、预览类动作最多 4 次。这是有限穷举，不是任意图纸或任意长历史的数学证明。方案过期后的 `RePreview` 与 `Reclassify` 都合法且已单独走到，本轮不挑选产品默认值。
+
+### 配置、预期与仓库布局实测
+
+所有新配置均使用 `PreviewAccept` 前缀。模型与配置放入 `docs/formal/` 后保持字节一致。本次在本分支的 `docs/formal/` 用相对路径重跑全部 21 个新配置，另将原 `Collaboration.cfg` 作为低成本健全性检查重跑一次，共 22 项，均符合预期。工具为与本分支 SingleWriter、SelectiveUndo 相同 SHA-256 的官方 v1.7.4 JAR、TLC 2.19（08 August 2024，rev: 5a47802）、Java 17.0.13，1 worker、seed 20261112、fp 0。仓库布局复测于 2026-11-12 16:07:00 至 16:08:32（Asia/Taipei）完成，主探索 TLC 报告用时 01min 14s。
+
+下表全部为本次仓库布局运行的真实数字。负例与见证在指定不变量首次违反时停止，exit 12 是预期结果，不是正向协议失败或工具崩溃。它们的深度不能解释为完整空间的最大深度。各配置摘要与短轨迹只保留决定性投影，不提交完整日志或缓存。
+
+| 配置 | 预期 | 实际 | 生成状态 | 不同状态 | 深度 | exit |
+|---|---|---|---:|---:|---:|---:|
+| [PreviewAcceptPositive](evidence/PreviewAcceptPositive.txt) | 通过 | 通过，队列耗尽 | 1872205 | 568443 | 6 | 0 |
+| [PreviewAcceptReject](evidence/PreviewAcceptReject.txt) | 通过 | 通过，队列耗尽 | 13 | 6 | 6 | 0 |
+| [PreviewAcceptRejectAfterEdit](evidence/PreviewAcceptRejectAfterEdit.txt) | 通过 | 通过，队列耗尽 | 11 | 5 | 5 | 0 |
+| [PreviewAcceptRebaseRotate](evidence/PreviewAcceptRebaseRotate.txt) | 通过 | 通过，队列耗尽 | 11 | 5 | 5 | 0 |
+| [PreviewAcceptRebaseHuman](evidence/PreviewAcceptRebaseHuman.txt) | 通过 | 通过，队列耗尽 | 17 | 8 | 7 | 0 |
+| [PreviewAcceptRebaseHumanRePreview](evidence/PreviewAcceptRebaseHumanRePreview.txt) | 通过 | 通过，队列耗尽 | 14 | 7 | 7 | 0 |
+| [PreviewAcceptRebaseHumanReclassify](evidence/PreviewAcceptRebaseHumanReclassify.txt) | 通过 | 通过，队列耗尽 | 13 | 6 | 6 | 0 |
+| [PreviewAcceptLaterUndo](evidence/PreviewAcceptLaterUndo.txt) | 通过 | 通过，队列耗尽 | 13 | 6 | 6 | 0 |
+| [PreviewAcceptRebaseCrop](evidence/PreviewAcceptRebaseCrop.txt) | 通过 | 通过，队列耗尽 | 11 | 5 | 5 | 0 |
+| [PreviewAcceptRebasePalette](evidence/PreviewAcceptRebasePalette.txt) | 通过 | 通过，队列耗尽 | 14 | 7 | 7 | 0 |
+| [PreviewAcceptRebaseABA](evidence/PreviewAcceptRebaseABA.txt) | 通过 | 通过，队列耗尽 | 16 | 8 | 8 | 0 |
+| [PreviewAcceptRebaseProject](evidence/PreviewAcceptRebaseProject.txt) | 通过 | 通过，队列耗尽 | 14 | 7 | 7 | 0 |
+| [PreviewAcceptWitnessRebaseRotate](evidence/PreviewAcceptWitnessRebaseRotate.txt) | 见证 NotRebaseRotate | NotRebaseRotate | 8 | 5 | 5 | 12 |
+| [PreviewAcceptWitnessLaterUndo](evidence/PreviewAcceptWitnessLaterUndo.txt) | 见证 NotLaterUndo | NotLaterUndo | 10 | 6 | 6 | 12 |
+| [PreviewAcceptWitnessRejectRestored](evidence/PreviewAcceptWitnessRejectRestored.txt) | 见证 NotRejectRestored | NotRejectRestored | 10 | 6 | 6 | 12 |
+| [PreviewAcceptWitnessRePreview](evidence/PreviewAcceptWitnessRePreview.txt) | 见证 NotRePreview | NotRePreview | 10 | 6 | 6 | 12 |
+| [PreviewAcceptWitnessReclassify](evidence/PreviewAcceptWitnessReclassify.txt) | 见证 NotReclassify | NotReclassify | 10 | 6 | 6 | 12 |
+| [PreviewAcceptWitnessConflict](evidence/PreviewAcceptWitnessConflict.txt) | 见证 NotConflict | NotConflict | 8 | 5 | 5 | 12 |
+| [PreviewAcceptWitnessPartial](evidence/PreviewAcceptWitnessPartial.txt) | 见证 NotPartial | NotPartial | 8 | 5 | 5 | 12 |
+| [PreviewAcceptWitnessStaleRotate](evidence/PreviewAcceptWitnessStaleRotate.txt) | 反例 StaleAcceptHarmless | StaleAcceptHarmless | 10 | 6 | 6 | 12 |
+| [PreviewAcceptWitnessStaleHuman](evidence/PreviewAcceptWitnessStaleHuman.txt) | 反例 StaleAcceptHarmless | StaleAcceptHarmless | 8 | 5 | 5 | 12 |
+| Collaboration（健全性检查） | 通过 | 通过，队列耗尽 | 616 | 332 | 10 | 0 |
+
+[布局复测摘要](evidence/PreviewAccept-layout-recheck.txt)保留全部计数与模型哈希。21 项中的 12 个正向配置 exit 0，7 个覆盖见证与 2 个过期接受反例 exit 12，原 Collaboration 健全性检查 exit 0。不同配置状态空间重叠，不求和。此前一次非正式检查使用了更新的 TLC（2026.11.03.180953）；本次公开发布的数字全部来自上述 2.19 JAR，21 项计数与那次结果一致。
+
+### 反例与覆盖见证
+
+- `PreviewAcceptWitnessStaleRotate` 在旋转后把旧坐标写到错误格子，覆盖人的擦除，并让另一笔本来可撤销的操作变得不可恢复。
+- `PreviewAcceptWitnessStaleHuman` 在人改过同一格之后，仍把旧方案写回去，覆盖人的笔迹。
+- 两条反例都破坏可逆性，但没有造成日志分叉。损害不是第 4 类硬停止。
+
+`PreviewAcceptWitnessRebaseRotate` 证明同一条先预览再旋转的路径上，按当前前缀重推导会写到正确位置。`WitnessConflict` 证明人改过同一格后只返回第 3 类、不写盘。`WitnessLaterUndo`、`WitnessRejectRestored`、`WitnessPartial` 分别证明补偿可再撤销、拒绝后再恢复，以及裁剪后的部分恢复。`WitnessRePreview` 与 `WitnessReclassify` 证明两种过期后续动作都可以走到，并且不进入第 4 类；二者都合法，本轮不挑选默认值。
+
+### 相对路径复现
+
+先按本文件 SingleWriter 节的工具下载及 SHA-256 命令，将官方 JAR 放入仓库忽略目录 `.wip/formal-tools/`。下面从仓库根目录开始，Java 17 或更高版本即可运行。JAR 与输出日志均不纳入版本控制。每个配置使用不同的缓存目录。
+
+```sh
+cd docs/formal
+java -Xmx2g -XX:+UseParallelGC -cp ../../.wip/formal-tools/tla2tools.jar \
+  tlc2.TLC -workers 1 -seed 20261112 -fp 0 \
+  -metadir ../../.wip/formal-tools/recheck-preview-accept-positive \
+  -config PreviewAcceptPositive.cfg PreviewAccept.tla
+```
+
+全量复现时，下面的退出码检查不吞掉运行错误；对 exit 12 的结果，还需按表核对指定的不变量名。
+
+```sh
+for cfg in PreviewAccept*.cfg; do
+  case "$cfg" in
+    PreviewAcceptWitness*) expected=12 ;;
+    *) expected=0 ;;
+  esac
+  status=0
+  java -Xmx2g -XX:+UseParallelGC -cp ../../.wip/formal-tools/tla2tools.jar \
+    tlc2.TLC -workers 1 -seed 20261112 -fp 0 \
+    -metadir "../../.wip/formal-tools/recheck-${cfg%.cfg}" \
+    -config "$cfg" PreviewAccept.tla \
+    > "../../.wip/formal-tools/${cfg%.cfg}.log" 2>&1 || status=$?
+  test "$status" -eq "$expected" || exit 1
+done
+```
+
+本轮如需重复 Collaboration 健全性检查，可另用独立缓存目录运行原配置，不与上表 21 项的状态数相加：
+
+```sh
+java -Xmx2g -XX:+UseParallelGC -cp ../../.wip/formal-tools/tla2tools.jar \
+  tlc2.TLC -workers 1 -seed 20261112 -fp 0 \
+  -metadir ../../.wip/formal-tools/recheck-preview-original-collaboration \
+  -config Collaboration.cfg Collaboration.tla
+```

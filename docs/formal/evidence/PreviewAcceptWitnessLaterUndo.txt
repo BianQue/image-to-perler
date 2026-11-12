@@ -1,0 +1,14 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Repository-layout recheck: 2026-11-12, Asia/Taipei.
+Config: PreviewAcceptWitnessLaterUndo.cfg; module: PreviewAccept.tla.
+Expected: reachability NotLaterUndo.
+Generated=10; distinct=6; depth=6; exit=12.
+Observed: NotLaterUndo.
+Model SHA256: 58a9f4425f9ed70e90db14b45e99733827f0b9806d59ba0b878adc956b45031a
+Config SHA256: a5d32d2d70ec124761a0b1f2e35a768e806ad7bc889455fbc642786062ca242a
+JAR SHA256: 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
+
+Decisive projection of the checked trace (1-based cell indices):
+Accept a rebased compensation for step 1, then preview and accept an undo of
+that compensation. The accepted write is a normal later-undoable log record;
+cell 1 returns to color 2, open.

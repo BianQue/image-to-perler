@@ -1,0 +1,13 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Repository-layout recheck: 2026-11-12, Asia/Taipei.
+Config: PreviewAcceptWitnessReclassify.cfg; module: PreviewAccept.tla.
+Expected: reachability NotReclassify.
+Generated=10; distinct=6; depth=6; exit=12.
+Observed: NotReclassify.
+Model SHA256: 58a9f4425f9ed70e90db14b45e99733827f0b9806d59ba0b878adc956b45031a
+Config SHA256: 8a76963223667ecda11805f68240750a0957974d5c65ffb620add13bb4eec3fb
+JAR SHA256: 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
+
+Decisive projection of the checked trace (1-based cell indices):
+The same class-3 conflict can be reclassified as a fresh typed conflict,
+dropping the old overlay. This is the other legal follow-up, not a required default.

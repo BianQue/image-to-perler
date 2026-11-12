@@ -1,0 +1,17 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Repository-layout recheck: 2026-11-12, Asia/Taipei.
+Config: PreviewAcceptWitnessStaleRotate.cfg; module: PreviewAccept.tla.
+Expected: counterexample StaleAcceptHarmless.
+Generated=10; distinct=6; depth=6; exit=12.
+Observed: StaleAcceptHarmless.
+Model SHA256: 58a9f4425f9ed70e90db14b45e99733827f0b9806d59ba0b878adc956b45031a
+Config SHA256: 2d36e4e85c67427bda32764c1cdc784dd8f56a4d5584c9f3765a665e07cfa8b4
+JAR SHA256: 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
+
+Decisive projection of the checked trace (1-based cell indices):
+Agent paints cell 1 to color 2; the human erases cell 4; preview of step 1
+targets then-index 1; then rotate 3x2 -> 2x3. Identity 1 is now at index 2;
+a rebased accept would write there. AcceptStale writes at stale index 1
+instead: identity 4 becomes color 1 with done=true, the human erase is
+overwritten, and identity 1 stays color 2. dests={1}, rederivedDests={2},
+collateral={2}. Step 2 is no longer safely undoable.
