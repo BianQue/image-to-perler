@@ -1,0 +1,14 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Repository-layout recheck: 2026-11-12, Asia/Taipei.
+Config: SelectiveUndoNegativeValueABA.cfg; module: SelectiveUndo.tla.
+Expected: counterexample NoSilentOverwrite.
+Generated=5; distinct=5; depth=5; exit=12.
+Observed: NoSilentOverwrite.
+Model SHA256: 00b7590955a0307c2f176fe3a079524cda219c23ef900895d54533688a80cfd4
+Config SHA256: 3c12c6f2b7548cc6775fce95566c79f8a41200980767bd02ff815792f791dc1a
+JAR SHA256: 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
+
+Decisive projection of the checked trace (1-based cell indices):
+Paint cell 1: color 1/done=true/v0 -> color 2/done=false/v1.
+Human: color 0/v2 -> color 2/v3. Value comparison accepts the stale target.
+Undo writes color 1/done=true over the later human version; NoSilentOverwrite fails.

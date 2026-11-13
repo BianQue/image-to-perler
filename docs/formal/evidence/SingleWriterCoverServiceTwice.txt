@@ -1,0 +1,10 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Recorded: 2026-11-11, Asia/Taipei; Java 17.0.13; one worker; breadth-first search.
+Config: SingleWriterCoverServiceTwice.cfg; module: SingleWriter.tla
+Config renamed from CoverServiceTwice.cfg without changing its contents.
+Fingerprint polynomial: 0; seed: 1.
+Error: Invariant NotTwoServiceRecoveries is violated.
+This deliberate Not* invariant failure is a reachability witness, not a safety failure.
+61483 states generated, 17150 distinct states found, 5263 states left on queue.
+The depth of the complete state graph search is 14.
+PROCESS_EXIT_CODE=12

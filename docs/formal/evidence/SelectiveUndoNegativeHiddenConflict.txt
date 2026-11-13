@@ -1,0 +1,15 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Repository-layout recheck: 2026-11-12, Asia/Taipei.
+Config: SelectiveUndoNegativeHiddenConflict.cfg; module: SelectiveUndo.tla.
+Expected: counterexample ConflictReported.
+Generated=4; distinct=4; depth=4; exit=12.
+Observed: ConflictReported.
+Model SHA256: 00b7590955a0307c2f176fe3a079524cda219c23ef900895d54533688a80cfd4
+Config SHA256: 03fdb1acddb29e82d20c292a899579ab55aada4c9c7b5e0fb684392d2f4abc73
+JAR SHA256: 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
+
+Decisive projection of the checked trace (1-based cell indices):
+Paint old cells 1 and 6 to empty, then crop away the right column.
+Old cell 1 survives; old cell 6 has no destination.
+The mutant restores only cell 1, suppresses the missing-cell conflict and reports success.
+ConflictReported fails.

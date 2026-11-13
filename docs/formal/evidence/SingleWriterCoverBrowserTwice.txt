@@ -1,0 +1,10 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Recorded: 2026-11-11, Asia/Taipei; Java 17.0.13; one worker; breadth-first search.
+Config: SingleWriterCoverBrowserTwice.cfg; module: SingleWriter.tla
+Config renamed from CoverBrowserTwice.cfg without changing its contents.
+Fingerprint polynomial: 0; seed: 1.
+Error: Invariant NotTwoBrowserRecoveries is violated.
+This deliberate Not* invariant failure is a reachability witness, not a safety failure.
+37585 states generated, 10954 distinct states found, 3776 states left on queue.
+The depth of the complete state graph search is 13.
+PROCESS_EXIT_CODE=12

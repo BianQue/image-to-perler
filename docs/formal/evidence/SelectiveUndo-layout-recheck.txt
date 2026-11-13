@@ -1,0 +1,44 @@
+TLC2 2.19; Java 17.0.13; 2026-11-12, Asia/Taipei.
+Repository-layout recheck: 32 SelectiveUndo configs plus original Collaboration.
+One worker; breadth-first; seed 20261112; fp 0. All expected invariants and exit codes matched.
+Config names below omit the common SelectiveUndo prefix, except Collaboration.
+
+Config | generated | distinct | depth | exit | result
+Positive | 266625 | 134295 | 5 | 0 | PASS
+PositiveABA | 6 | 5 | 5 | 0 | PASS
+WitnessABA | 5 | 5 | 5 | 12 | NotABA
+PositiveRotate | 6 | 5 | 5 | 0 | PASS
+WitnessRotate | 5 | 5 | 5 | 12 | NotRotate
+PositiveFlipH | 6 | 5 | 5 | 0 | PASS
+WitnessFlipH | 5 | 5 | 5 | 12 | NotFlip
+PositiveFlipV | 6 | 5 | 5 | 0 | PASS
+WitnessFlipV | 5 | 5 | 5 | 12 | NotFlip
+PositiveChain | 7 | 6 | 6 | 0 | PASS
+WitnessChain | 6 | 6 | 6 | 12 | NotPartial
+PositiveReadDependency | 5 | 4 | 4 | 0 | PASS
+WitnessReadDependency | 4 | 4 | 4 | 12 | NotRawReplayGap
+PositivePartial | 5 | 4 | 4 | 0 | PASS
+WitnessPartial | 4 | 4 | 4 | 12 | NotPartial
+PositiveCrop | 5 | 4 | 4 | 0 | PASS
+WitnessCrop | 4 | 4 | 4 | 12 | NotPartial
+PositivePalette | 5 | 4 | 4 | 0 | PASS
+WitnessPalette | 4 | 4 | 4 | 12 | NotConflict
+PositivePaletteInverse | 4 | 3 | 3 | 0 | PASS
+WitnessPaletteInverse | 3 | 3 | 3 | 12 | NotConflict
+PositiveDone | 4 | 3 | 3 | 0 | PASS
+WitnessDone | 3 | 3 | 3 | 12 | NotRestore
+PositiveProject | 5 | 4 | 4 | 0 | PASS
+WitnessProject | 4 | 4 | 4 | 12 | NotConflict
+PositiveRepeat | 6 | 5 | 5 | 0 | PASS
+WitnessRepeat | 5 | 5 | 5 | 12 | NotRepeat
+NegativeValueABA | 5 | 5 | 5 | 12 | NoSilentOverwrite
+NegativeNoCoordinateMap | 5 | 5 | 5 | 12 | CorrectInverse
+NegativePaletteGuess | 3 | 3 | 3 | 12 | CorrectInverse
+NegativeColorOnly | 3 | 3 | 3 | 12 | CorrectInverse
+NegativeHiddenConflict | 4 | 4 | 4 | 12 | ConflictReported
+Collaboration | 616 | 332 | 10 | 0 | PASS
+
+Module SHA256:
+00b7590955a0307c2f176fe3a079524cda219c23ef900895d54533688a80cfd4  SelectiveUndo.tla
+0acd29acc16eff0039ae4e70fcbefdcdffa92ae6841a475f3d19a3ae99f30ed7  Collaboration.tla
+Raw logs and caches are not included. Counts are per configuration; do not sum overlapping state spaces.

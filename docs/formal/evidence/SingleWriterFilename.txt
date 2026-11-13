@@ -1,0 +1,10 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Recorded: 2026-11-11, Asia/Taipei; Java 17.0.13; one worker; breadth-first search.
+Config: SingleWriterFilename.cfg; module: SingleWriter.tla
+Config renamed from Filename.cfg without changing its contents.
+Fingerprint polynomial: 0; seed: 1.
+Error: Invariant ProjectIdentity is violated.
+Trace projection (4 states): Q project hello -> grant P history without identity check -> bind Q page to P. badIdentity = TRUE.
+24 states generated, 15 distinct states found, 7 states left on queue.
+The depth of the complete state graph search is 4.
+PROCESS_EXIT_CODE=12

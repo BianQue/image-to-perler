@@ -1,0 +1,36 @@
+TLC 2.19; Java 17.0.13; 2026-11-12, Asia/Taipei.
+Repository-layout recheck: 21 PreviewAccept configs, plus original Collaboration as a sanity check.
+One worker; breadth-first; seed 20261112; fp 0. All expected invariants and exit codes matched.
+SelectiveUndo and SingleWriter were not rerun this round.
+Config names below omit the common PreviewAccept prefix, except Collaboration.
+
+Config | generated | distinct | depth | exit | result
+Positive | 1872205 | 568443 | 6 | 0 | PASS
+Reject | 13 | 6 | 6 | 0 | PASS
+RejectAfterEdit | 11 | 5 | 5 | 0 | PASS
+RebaseRotate | 11 | 5 | 5 | 0 | PASS
+RebaseHuman | 17 | 8 | 7 | 0 | PASS
+RebaseHumanRePreview | 14 | 7 | 7 | 0 | PASS
+RebaseHumanReclassify | 13 | 6 | 6 | 0 | PASS
+LaterUndo | 13 | 6 | 6 | 0 | PASS
+RebaseCrop | 11 | 5 | 5 | 0 | PASS
+RebasePalette | 14 | 7 | 7 | 0 | PASS
+RebaseABA | 16 | 8 | 8 | 0 | PASS
+RebaseProject | 14 | 7 | 7 | 0 | PASS
+WitnessRebaseRotate | 8 | 5 | 5 | 12 | NotRebaseRotate
+WitnessLaterUndo | 10 | 6 | 6 | 12 | NotLaterUndo
+WitnessRejectRestored | 10 | 6 | 6 | 12 | NotRejectRestored
+WitnessRePreview | 10 | 6 | 6 | 12 | NotRePreview
+WitnessReclassify | 10 | 6 | 6 | 12 | NotReclassify
+WitnessConflict | 8 | 5 | 5 | 12 | NotConflict
+WitnessPartial | 8 | 5 | 5 | 12 | NotPartial
+WitnessStaleRotate | 10 | 6 | 6 | 12 | StaleAcceptHarmless
+WitnessStaleHuman | 8 | 5 | 5 | 12 | StaleAcceptHarmless
+Collaboration | 616 | 332 | 10 | 0 | PASS
+
+Module SHA256:
+58a9f4425f9ed70e90db14b45e99733827f0b9806d59ba0b878adc956b45031a  PreviewAccept.tla
+0acd29acc16eff0039ae4e70fcbefdcdffa92ae6841a475f3d19a3ae99f30ed7  Collaboration.tla
+JAR SHA256:
+936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
+Raw logs and caches are not included. Counts are per configuration; do not sum overlapping state spaces.

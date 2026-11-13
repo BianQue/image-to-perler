@@ -1,0 +1,10 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Recorded: 2026-11-11, Asia/Taipei; Java 17.0.13; one worker; breadth-first search.
+Config: SingleWriterGrantRace.cfg; module: SingleWriter.tla
+Config renamed from GrantRace.cfg without changing its contents.
+Fingerprint polynomial: 0; seed: 1.
+Error: Invariant SingleActiveWriter is violated.
+Trace projection (10 states): receive A epoch 1 -> grant B epoch 2 while work is pending -> flush A epoch 1. badFence = TRUE.
+22451 states generated, 6473 distinct states found, 3054 states left on queue.
+The depth of the complete state graph search is 10.
+PROCESS_EXIT_CODE=12

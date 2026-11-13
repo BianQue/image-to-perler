@@ -1,0 +1,13 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Repository-layout recheck: 2026-11-12, Asia/Taipei.
+Config: SelectiveUndoWitnessChain.cfg; module: SelectiveUndo.tla.
+Expected: reachability NotPartial.
+Generated=6; distinct=6; depth=6; exit=12.
+Observed: NotPartial.
+Model SHA256: 00b7590955a0307c2f176fe3a079524cda219c23ef900895d54533688a80cfd4
+Config SHA256: 56d4b09cb0509904b0c01247636cb5c90811b25ff6be11239282622889789205
+JAR SHA256: 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
+
+Decisive projection of the checked trace (1-based cell indices):
+Paint old cells 1 and 6 to empty; rotate, flip vertically, then crop the right column.
+Old cell 6 survives and is restored; old cell 1 was cropped and is reported as conflict.

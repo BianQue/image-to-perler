@@ -1,0 +1,13 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Repository-layout recheck: 2026-11-12, Asia/Taipei.
+Config: SelectiveUndoWitnessPaletteInverse.cfg; module: SelectiveUndo.tla.
+Expected: reachability NotConflict.
+Generated=3; distinct=3; depth=3; exit=12.
+Observed: NotConflict.
+Model SHA256: 00b7590955a0307c2f176fe3a079524cda219c23ef900895d54533688a80cfd4
+Config SHA256: ab886bd3c3b44946dc02874dd5257e02ab55a5c612b99d955ccd6fad409b2fb5
+JAR SHA256: 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
+
+Decisive projection of the checked trace (1-based cell indices):
+Replace the palette, then request selective undo of that structural transaction.
+The positive policy rejects the unsupported target and reports conflict.
