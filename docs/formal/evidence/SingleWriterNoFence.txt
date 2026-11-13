@@ -1,0 +1,10 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Recorded: 2026-11-11, Asia/Taipei; Java 17.0.13; one worker; breadth-first search.
+Config: SingleWriterNoFence.cfg; module: SingleWriter.tla
+Config renamed from NoFence.cfg without changing its contents.
+Fingerprint polynomial: 0; seed: 1.
+Error: Invariant SingleActiveWriter is violated.
+Trace projection (9 states): grant A epoch 1 -> grant B epoch 2 -> accept an unknown operation from A epoch 1. badFence = TRUE.
+10197 states generated, 3283 distinct states found, 1672 states left on queue.
+The depth of the complete state graph search is 9.
+PROCESS_EXIT_CODE=12

@@ -1,0 +1,9 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Repository-layout recheck: 2026-11-12, Asia/Taipei.
+Config: PreviewAcceptRebaseHumanRePreview.cfg; module: PreviewAccept.tla.
+Expected: PASS.
+Generated=14; distinct=7; depth=7; exit=0.
+Observed: PASS; queue exhausted.
+Model SHA256: 58a9f4425f9ed70e90db14b45e99733827f0b9806d59ba0b878adc956b45031a
+Config SHA256: 03ec318d023d3c2e2cbe24dc34ab4a82108f3ea24a7cbe6a8c3f9f6214c2d42f
+JAR SHA256: 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88

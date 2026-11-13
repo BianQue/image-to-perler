@@ -1,0 +1,89 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 100 and seed 7228486817695467681 with 1 worker on 32 cores with 7216MB heap and 64MB offheap memory [pid: 45536] (Windows 11 10.0 amd64, Microsoft 21.0.4 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file <repository>\docs\formal\Collaboration.tla
+Parsing file <temp>\Naturals.tla
+Parsing file <temp>\TLC.tla
+Parsing file <temp>\Sequences.tla
+Parsing file <temp>\FiniteSets.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module Collaboration
+Starting... (2026-11-11 18:08:57)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-11-11 18:08:58.
+Error: Invariant AcknowledgedIsDurable is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ humanSteps = 0
+/\ versions = <<0, 0>>
+/\ crashed = FALSE
+/\ bad = FALSE
+/\ structure = 0
+/\ diskCells = <<0, 0>>
+/\ cells = <<0, 0>>
+/\ before = 0
+/\ diskVersions = <<0, 0>>
+/\ afterVersion = 0
+/\ phase = "idle"
+/\ base = <<0, 0>>
+/\ ack = FALSE
+/\ baseStructure = 0
+/\ durableOp = FALSE
+
+State 2: <Plan line 20, col 3 to line 24, col 70 of module Collaboration>
+/\ humanSteps = 0
+/\ versions = <<0, 0>>
+/\ crashed = FALSE
+/\ bad = FALSE
+/\ structure = 0
+/\ diskCells = <<0, 0>>
+/\ cells = <<0, 0>>
+/\ before = 0
+/\ diskVersions = <<0, 0>>
+/\ afterVersion = 0
+/\ phase = "planned"
+/\ base = <<0, 0>>
+/\ ack = FALSE
+/\ baseStructure = 0
+/\ durableOp = FALSE
+
+State 3: <Prepare line 48, col 3 to line 54, col 43 of module Collaboration>
+/\ humanSteps = 0
+/\ versions = <<0, 0>>
+/\ crashed = FALSE
+/\ bad = FALSE
+/\ structure = 0
+/\ diskCells = <<0, 0>>
+/\ cells = <<0, 0>>
+/\ before = 0
+/\ diskVersions = <<0, 0>>
+/\ afterVersion = 0
+/\ phase = "prepared"
+/\ base = <<0, 0>>
+/\ ack = FALSE
+/\ baseStructure = 0
+/\ durableOp = FALSE
+
+State 4: <EarlyAck line 79, col 3 to line 83, col 48 of module Collaboration>
+/\ humanSteps = 0
+/\ versions = <<0, 0>>
+/\ crashed = FALSE
+/\ bad = FALSE
+/\ structure = 0
+/\ diskCells = <<0, 0>>
+/\ cells = <<0, 0>>
+/\ before = 0
+/\ diskVersions = <<0, 0>>
+/\ afterVersion = 0
+/\ phase = "prepared"
+/\ base = <<0, 0>>
+/\ ack = TRUE
+/\ baseStructure = 0
+/\ durableOp = FALSE
+
+37 states generated, 30 distinct states found, 20 states left on queue.
+The depth of the complete state graph search is 4.
+The average outdegree of the complete state graph is 3 (minimum is 0, the maximum 5 and the 95th percentile is 5).
+Finished in 00s at (2026-11-11 18:08:58)

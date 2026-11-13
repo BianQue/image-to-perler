@@ -1,0 +1,21 @@
+Source-operation recheck: 2026-11-12, Asia/Taipei; Node 24.22.1.
+Command from repository root: node docs/formal/SelectiveUndoSourceCheck.mjs
+Source Git blob SHA1 (matches main ac598aa):
+90178aef6f2d2c21dc30196e9a7c065270977c5e  src/core.ts
+ab81e29516205f1f073928342905320e97d77044  src/main.ts
+
+PASS 1: paint resets completed only on actual color change
+PASS 2: replaceColor resolves a concrete footprint and clears completed
+PASS 3: rotate: every 3x2 source coordinate maps with both fields
+PASS 4: flipH: every 3x2 source coordinate maps with both fields
+PASS 5: flipV: every 3x2 source coordinate maps with both fields
+PASS 6: four rotations and two flips round trip without information loss
+PASS 7: resize shrink retains upper-left cells and drops right/bottom (not arbitrary crop UI)
+PASS 8: actual main.ts palette handler merges A/B to X and preserves completed/null
+PASS 9: many-to-one palette has no unique color inverse
+PASS 10: restoring color alone can be format-valid but semantically wrong
+  witness: saved effect keeps restored cell A/done=true; raw Replace(A,null) erases it
+PASS 11: raw replace replay differs from committed-effect preservation without write overlap
+PASS 12: raw fill replay can change a region even without overlapping committed writes
+PASS 13: palette transform is not automatically equivariant with paint because paint may become a no-op
+Source checks: 13 passed. These check existing pure operations, not a selective-undo implementation.

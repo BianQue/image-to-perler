@@ -1,0 +1,13 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Repository-layout recheck: 2026-11-12, Asia/Taipei.
+Config: SelectiveUndoWitnessFlipV.cfg; module: SelectiveUndo.tla.
+Expected: reachability NotFlip.
+Generated=5; distinct=5; depth=5; exit=12.
+Observed: NotFlip.
+Model SHA256: 00b7590955a0307c2f176fe3a079524cda219c23ef900895d54533688a80cfd4
+Config SHA256: 2bddf3a0d121b831b41d4cca071c124d2f5e4a46bcd68a0f86b0b89110e6c4ec
+JAR SHA256: 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
+
+Decisive projection of the checked trace (1-based cell indices):
+Paint cell 1; flip vertically; human paints current index 6.
+Undo restores the target at mapped index 4 and preserves the unrelated human edit.

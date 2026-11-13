@@ -1,0 +1,20 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Repository-layout recheck: 2026-11-12, Asia/Taipei.
+Config: LogBackupWitnessRestore.cfg; module: LogBackup.tla.
+Expected: counterexample NotLegalRestore.
+Generated=10; distinct=6; depth=6; exit=12.
+Observed: NotLegalRestore.
+Model SHA256: bc566527134a110dd6708d69a37d25e9b81c2c1c1ffa22ae39d51360b3282229
+Config SHA256: 84680952d0a49778e2fd009de8a6a810c06e3e7917f0575d0a0dd52a40fbd166
+JAR SHA256: 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
+
+Decisive projection of the checked trace:
+在 <<1, 2>> 上做备份，现场日志继续追加到 <<1, 2, 3>>。备份是现场可恢复日志的前缀。合法恢复不改现场：日志仍是 <<1, 2, 3>>，世代仍是 1，也没有进入第 4 类。
+
+State sequence:
+  S1 init reason=ok class=0 pid=P epoch=1 dropped=0 hist=<<>> phys=<<>> ckpt=none@0<<>> pending=none@0 unacked=id0/base=<<>> backup=none
+  S2 commit reason=ok class=0 pid=P epoch=1 dropped=0 hist=<<1>> phys=<<1>> ckpt=none@0<<>> pending=none@0 unacked=id0/base=<<>> backup=none
+  S3 commit reason=ok class=0 pid=P epoch=1 dropped=0 hist=<<1, 2>> phys=<<1, 2>> ckpt=none@0<<>> pending=none@0 unacked=id0/base=<<>> backup=none
+  S4 backup reason=ok class=0 pid=P epoch=1 dropped=0 hist=<<1, 2>> phys=<<1, 2>> ckpt=none@0<<>> pending=none@0 unacked=id0/base=<<>> backup=P:<<1, 2>>
+  S5 commit reason=ok class=0 pid=P epoch=1 dropped=0 hist=<<1, 2, 3>> phys=<<1, 2, 3>> ckpt=none@0<<>> pending=none@0 unacked=id0/base=<<>> backup=P:<<1, 2>>
+  S6 restoreMatching reason=already-included class=0 pid=P epoch=1 dropped=0 hist=<<1, 2, 3>> phys=<<1, 2, 3>> ckpt=none@0<<>> pending=none@0 unacked=id0/base=<<>> backup=P:<<1, 2>>

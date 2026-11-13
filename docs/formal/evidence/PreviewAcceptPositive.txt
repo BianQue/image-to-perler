@@ -1,0 +1,9 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Repository-layout recheck: 2026-11-12, Asia/Taipei.
+Config: PreviewAcceptPositive.cfg; module: PreviewAccept.tla.
+Expected: PASS.
+Generated=1872205; distinct=568443; depth=6; exit=0.
+Observed: PASS; queue exhausted.
+Model SHA256: 58a9f4425f9ed70e90db14b45e99733827f0b9806d59ba0b878adc956b45031a
+Config SHA256: 7696912d0289319e508793663443d8c1653440343f6744cb338248a2307a9bb0
+JAR SHA256: 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88

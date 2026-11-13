@@ -1,0 +1,20 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Repository-layout recheck: 2026-11-12, Asia/Taipei.
+Config: LogBackupNegativeCompactBeforeDurable.cfg; module: LogBackup.tla.
+Expected: counterexample RecoverableMatchesHist.
+Generated=10; distinct=6; depth=6; exit=12.
+Observed: RecoverableMatchesHist.
+Model SHA256: bc566527134a110dd6708d69a37d25e9b81c2c1c1ffa22ae39d51360b3282229
+Config SHA256: f47e5fd7ca4fabecf1389f6188def7b2bd8027017b2b482797e5cb271dd41d9d
+JAR SHA256: 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
+
+Decisive projection of the checked trace:
+在 <<1, 2>> 上只写下尚未持久的检查点，再追加操作 3 后压缩。待写入检查点不能作为恢复依据。物理日志变成 <<3>>，丢掉前缀长度 2，可恢复日志只剩下后缀 <<3>>，与压缩前的完整历史 <<1, 2, 3>> 不一致。
+
+State sequence:
+  S1 init reason=ok class=0 pid=P epoch=1 dropped=0 hist=<<>> phys=<<>> ckpt=none@0<<>> pending=none@0 unacked=id0/base=<<>> backup=none
+  S2 commit reason=ok class=0 pid=P epoch=1 dropped=0 hist=<<1>> phys=<<1>> ckpt=none@0<<>> pending=none@0 unacked=id0/base=<<>> backup=none
+  S3 commit reason=ok class=0 pid=P epoch=1 dropped=0 hist=<<1, 2>> phys=<<1, 2>> ckpt=none@0<<>> pending=none@0 unacked=id0/base=<<>> backup=none
+  S4 startCheckpoint reason=ok class=0 pid=P epoch=1 dropped=0 hist=<<1, 2>> phys=<<1, 2>> ckpt=none@0<<>> pending=pending@2 unacked=id0/base=<<>> backup=none
+  S5 commit reason=ok class=0 pid=P epoch=1 dropped=0 hist=<<1, 2, 3>> phys=<<1, 2, 3>> ckpt=none@0<<>> pending=pending@2 unacked=id0/base=<<>> backup=none
+  S6 compactBeforeDurable reason=not-durable class=0 pid=P epoch=1 dropped=2 hist=<<1, 2, 3>> phys=<<3>> ckpt=none@0<<>> pending=pending@2 unacked=id0/base=<<>> backup=none
